@@ -1,0 +1,37 @@
+#main-container {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+
+#taskbar {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.75);
+
+    height: 5%;
+}
+
+#main-screen {
+    position: relative;
+    height: inherit;
+}
+
+/* ------- */
+
+#weather-widget {
+    position: relative;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#mail-app {
+    position: absolute;
+    left: 50%;
+
+    width: max-content;
+    height: max-content;
+}
+

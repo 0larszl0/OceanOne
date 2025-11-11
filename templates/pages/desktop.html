@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+OceanOne
+{% endblock title %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='desktop.css') }}">
+{% endblock stylesheets %}
+
+{% block main %}
+<div id="main-container">
+    <div id="main-screen">
+        <div id="weather-widget"></div>
+
+        <div id="mail-app">
+            <button>Click ME!</button>
+        </div>
+    </div>
+
+    <div id="taskbar"></div>
+
+</div>
+{% endblock main %}
