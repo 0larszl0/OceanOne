@@ -6,10 +6,31 @@
 }
 
 #taskbar {
+    display: flex;
     position: relative;
     background-color: rgba(0, 0, 0, 0.75);
 
     height: 5%;
+}
+
+#taskbar-apps {
+    position: relative;
+    margin: 1%;
+    display: flex;
+    flex-flow: row;
+
+    width: 100%;
+    justify-content: center;
+}
+
+.app-icon {
+    position: relative;
+
+    width: max-content;
+    height: max-content;
+
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #main-screen {
@@ -26,12 +47,3 @@
     top: 50%;
     transform: translate(-50%, -50%);
 }
-
-#mail-app {
-    position: absolute;
-    left: 50%;
-
-    width: max-content;
-    height: max-content;
-}
-
