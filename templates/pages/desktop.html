@@ -5,20 +5,36 @@ OceanOne
 {% endblock title %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='desktop.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_universal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_desktop.css') }}">
 {% endblock stylesheets %}
+
+{% block scripts %}
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_utils.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
+{% endblock scripts %}
 
 {% block main %}
 <div id="main-container">
     <div id="main-screen">
-        <div id="weather-widget"></div>
+        <div id="weather-widget">
+            <div id="temperature-container">
+                <span id="temperature-val">X</span>
+                <span id="temperature-sym">°</span>
+                <span id="temperature-unit">C</span>
+            </div>
+            <div id="weather-icon"></div>
+            <div id="location">
+                <span>City, Country</span>
+            </div>
+            <div id="weather-details"></div>
+        </div>
     </div>
 
     <div id="taskbar">
         <div id="taskbar-apps">
             <div class="app-icon">
-                <button>Click ME!</button>
+                <button onclick="updateWeather();">Click ME!</button>
             </div>
             <div class="app-icon">
                 <button>Click ME!</button>
