@@ -17,11 +17,11 @@ async function bodiedFetch(target_dest, body = {}, func = function(x){}, ...func
             },
             body: JSON.stringify(body)
         }
-    ).then(function(response) {
-        return response.text();
+    ).then(function(response) {  // catches the response
+        return response.json();  // returns the json object, once the Promise of the response has been fulfilled.
 
-    }).then(function(text_response) {
-        func(text_response, ...func_args);
+    }).then(function(response) {  // pushes the json object to whatever function was queued with any arguments.
+        func(response, ...func_args);
 
     }).catch(function(error) {
         console.log(error);
