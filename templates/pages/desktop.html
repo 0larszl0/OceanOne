@@ -122,16 +122,36 @@ OceanOne
     <div id="main-screen">
         <div id="weather-widget">
             <div id="temperature-container">
-                <span id="temperature-val">X</span>
+                <span id="temperature">X</span>
                 <span id="temperature-sym">°</span>
                 <span id="temperature-unit">C</span>
             </div>
             <div id="weather-icon"></div>
             <div id="location-container">
-                <span id="location">City, Country</span>
+                <span id="city">City</span>
+                <span>, </span>
+                <span id="region">Region</span>
             </div>
-            <div id="weather-details"></div>
+            <div id="weather-details">
+                <div>
+                    <span>Humidity: </span>
+                    <span id="humidity">X</span>
+                </div>
+                <div>
+                    <span>Feels like: </span>
+                    <span id="feels-like">X</span>
+                </div>
+                <div>
+                    <span>Wind speed: </span>
+                    <span id="wind-speed">X</span>
+                </div>
+                <div>
+                    <span>Wind direction: </span>
+                    <span id="wind-direction">X</span>
+                </div>
+            </div>
         </div>
+
         <div id="email-window" class="app-window hidden">
             <div class="title-bar">
                 <span>Email</span>

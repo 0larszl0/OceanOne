@@ -28,12 +28,13 @@ async def get_weather() -> Response:
     print(location_info)
 
     if location_info.get("error"):
-        return jsonify({"city": '?', "region": '?', "temperature": '?', "temp_kind": '?', "kind": '?'})
+        return jsonify({"city": '?', "region": '?', "temperature": '?', "temperature-unit": '?', "kind": '?', "humidity": '?',
+                        "feels-like": '?', "wind-speed": '?', "wind-direction": '?'})
 
     # -- Get weather information
     # - Adjust weather client unit type based on preference in js_hourlyWeather.mjs
     unit = pw.METRIC
-    if req_data["temp_kind"].upper() == 'F':
+    if req_data["temperature-unit"].upper() == 'F':
         unit = pw.IMPERIAL
 
     # - Get weather info based on city.
@@ -47,6 +48,10 @@ async def get_weather() -> Response:
         "city": location_info["city"],
         "region": location_info["region"],
         "temperature": weather.temperature,
-        "temp_kind": req_data["temp_kind"],
-        "kind": weather.kind.name
+        "temperature-unit": req_data["temperature-unit"],
+        "kind": weather.kind.name,
+        "humidity": weather.humidity,
+        "feels-like": weather.feels_like,
+        "wind-speed": weather.wind_speed,
+        "wind-direction": weather.wind_direction.name
     })
