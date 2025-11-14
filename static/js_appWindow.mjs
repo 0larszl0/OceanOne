@@ -20,7 +20,8 @@ async function createWindow(ctx, window_group) {
             break;
     }
 
-    new_window.classList = "app-window hidden"
+    new_window.classList = "app-window hidden";
+    addFunctionalities(new_window);
     window_group.appendChild(new_window);
 }
 
@@ -35,6 +36,11 @@ function add_src(src, element) {
 
 
 /* --- Window Visibility --- */
+
+/**
+ * Toggles a selected window, and creates a group for a particular set of windows under a particular context.
+ * @param {string} ctx The context for a group and window.
+ */
 async function toggleWindow(ctx) {
     let window_container = document.getElementById("window-container");
     let window_group = document.getElementById(`${ctx}-group`);
@@ -56,30 +62,16 @@ async function toggleWindow(ctx) {
 }
 
 
+/* Window Functionality */
 
-
-
-
-
-
-
-
-
-
-
-
-
-function openEmailWindow() {
-    const win = document.getElementById("email-window");
-    if (win) win.classList.remove("hidden");
-}
-
-function closeEmailWindow() {
-    const win = document.getElementById("email-window");
-    if (win) win.classList.add("hidden");
-}
-
-function makeWindowDraggableAndResizable(win) {
+/**
+ * Adds events that induce:
+ *      - Drag
+ *      - Resizing
+ * functionalities to a given window.
+ * @param {HTMLDivElement} win The window to add event functionality for.
+ */
+function addFunctionalities(win) {
     const titleBar = win.querySelector(".title-bar");
     const resizeHandle = win.querySelector(".resize-handle");
 
@@ -145,10 +137,3 @@ function makeWindowDraggableAndResizable(win) {
         document.removeEventListener("mouseup", stopResize);
     }
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-    const emailWin = document.getElementById("email-window");
-    if (emailWin) {
-        makeWindowDraggableAndResizable(emailWin);
-    }
-});

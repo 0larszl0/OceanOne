@@ -1,0 +1,52 @@
+.app-window {
+    position: absolute;
+    top: 120px;
+    left: 120px;
+    width: 400px;
+    height: 260px;
+    background: #ffffff;
+    border: 2px solid #222;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.hidden {
+    display: none;
+}
+
+.title-bar {
+    background: #333;
+    color: white;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    cursor: move;
+    user-select: none;
+}
+
+
+.window-body {
+    padding: 12px;
+}
+
+.close-btn {
+    background: red;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 2px 7px;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    right: 4px;
+    bottom: 4px;
+    cursor: se-resize;
+    background: #ccc;
+    border-radius: 3px;
+}

@@ -7,6 +7,8 @@ OceanOne
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css_universal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_desktop.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_windows.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_weatherWidget.css') }}">
 {% endblock stylesheets %}
 
 {% block scripts %}
@@ -56,11 +58,21 @@ OceanOne
 
     <div id="taskbar">
         <div id="taskbar-apps">
-            <div class="app-icon">
-                <button onclick="updateWeather();">Click ME!</button>
+            <div class="app">
+                <div class="app-preview">
+                </div>
+                <div class="app-icon">
+                    <button onclick="updateWeather();">Click ME!</button>
+                </div>
             </div>
-            <div class="app-icon">
-                <button onclick="toggleWindow('email')">CreateIFrame</button>
+
+            <div class="app">
+                <div class="app-preview">
+                    <span id="app-label">Mail</span>
+                </div>
+                <div class="app-icon">
+                    <button onclick="toggleWindow('email')">[Mail]</button>
+                </div>
             </div>
         </div>
     </div>
