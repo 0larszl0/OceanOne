@@ -15,6 +15,7 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_utils.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_app.mjs') }}"></script>
 {% endblock scripts %}
 
 {% block main %}
@@ -66,8 +67,8 @@ OceanOne
                 </div>
             </div>
 
-            <div class="app">
-                <div class="app-preview">
+            <div id="email" class="app">
+                <div class="app-previews">
                     <span id="app-label">Mail</span>
                 </div>
                 <div class="app-icon">

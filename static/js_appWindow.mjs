@@ -8,9 +8,9 @@
 async function createWindow(ctx, window_group) {
     let new_window = document.createElement("div");
 
+    // send a fetch for the window data with the given context, and then add that data to the new window.
     switch (ctx) {
         case 'email':
-            // send a fetch for the window data with the given context, and then add that data to the new window.
             await bodiedFetch(
                 "/get-window",
                 {"ctx": ctx},
@@ -20,9 +20,28 @@ async function createWindow(ctx, window_group) {
             break;
     }
 
+    // Add any classes and functionalities before adding the element into the group (and also the screen)
     new_window.classList = "app-window hidden";
     addFunctionalities(new_window);
     window_group.appendChild(new_window);
+
+    // add a preview of the created app preview list.
+    let app_previews = document.getElementById(ctx).querySelector(".app-previews");
+    let window_clone = new_window.cloneNode(true);
+    window_clone.classList = "";
+    let window_style = getComputedStyle(new_window);
+    console.log(window_style, window_style.backgroundColor);
+
+    window_clone.setAttribute("style", `
+        width: ${window_style.width};
+        height: ${window_style.height};
+        background: ${window_style.backgroundColor};
+    `);
+    app_previews.appendChild(window_clone);
+
+
+
+
 }
 
 /**
