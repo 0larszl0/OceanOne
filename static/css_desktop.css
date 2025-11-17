@@ -50,8 +50,10 @@
     visibility: hidden;
 
     /* Centralises the contents of the preview to match its centered alignment with the app. */
+    /*
     display: flex;
     justify-content: center;
+    */
 }
 
 #app-label {

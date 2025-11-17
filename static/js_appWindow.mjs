@@ -21,7 +21,7 @@ async function createWindow(ctx, window_group) {
     }
 
     // Add any classes and functionalities before adding the element into the group (and also the screen)
-    new_window.classList = "app-window hidden";
+    new_window.classList.add("app-window");
     addFunctionalities(new_window);
     window_group.appendChild(new_window);
 
@@ -30,6 +30,8 @@ async function createWindow(ctx, window_group) {
         {},
         add_preview, ctx, new_window
     )
+
+    new_window.classList.add("hidden");  // adds the hidden class at the end, because the clone in the preview may need to use the display attribute
 }
 
 /**
@@ -63,6 +65,9 @@ function add_preview(response_of_temp, ctx, win) {
 
     // Set some essential styles that make it look identical to the window we are previewing
     win_clone.setAttribute("style", `
+        display: ${win_style.display};
+        flex-flow: ${win_style.flexFlow};
+
         width: ${win_style.width};
         height: ${win_style.height};
         background-color: ${win_style.backgroundColor};
@@ -75,7 +80,7 @@ function add_preview(response_of_temp, ctx, win) {
 
     // -- Adjust headers of the preview container --
     // - Make the title the same as the context -
-    preview_container.querySelector(".preview-title").innerText = ctx;
+    preview_container.querySelector(".preview-title").innerText = capitalise(ctx);
 
     // -- Ensure the app label is hidden --
     document.getElementById("app-label").classList.add("hidden");  // classList is like a set, where even if you add the same class again, it won't repeat.
@@ -104,7 +109,7 @@ function fitContainer(container, element) {
 
     element.style.cssText += `
         position: relative;
-        transform: scale(${con_width / el_width}, ${con_height / el_height});
+        transform: scale(${(con_width / el_width) * 0.85}, ${(con_height / el_height) * 0.9});
         left: ${(con_width - el_width) / 2}px;
         top: ${(con_height - el_height) / 2}px;
     `;
@@ -118,6 +123,15 @@ function fitContainer(container, element) {
  */
 function stripUnit(value) {
     return parseFloat(value.substring(0, value.length - 2));
+}
+
+
+/**
+ * Capitalises some text, i.e. email -> Email.
+ * @param {string} text The text to capitalise.
+ */
+function capitalise(text) {
+    return text[0].toUpperCase() + text.substring(1);
 }
 
 

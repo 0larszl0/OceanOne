@@ -12,13 +12,13 @@ window.onload = function() {
             console.log("Hovering");
             let app_previews = this.querySelector(".app-previews");
 
-//             app_previews.setAttribute("style", "visibility: visible;")  // make the preview visible
+            app_previews.setAttribute("style", "visibility: visible;")  // make the preview visible
         });
 
         apps[i].addEventListener("mouseout", function(event) {  // When the mouse leaves the app family
             let app_previews = this.querySelector(".app-previews");
 
-//             app_previews.setAttribute("style", "visibility: hidden;")  // hide the preview.
+            app_previews.setAttribute("style", "visibility: hidden;")  // hide the preview.
         });
     }
 }
