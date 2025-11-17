@@ -65,13 +65,11 @@ function add_preview(response_of_temp, ctx, win) {
     win_clone.setAttribute("style", `
         width: ${win_style.width};
         height: ${win_style.height};
-        background: ${win_style.backgroundColor};
+        background-color: ${win_style.backgroundColor};
     `);
 
     let app_previews = document.getElementById(ctx).querySelector(".app-previews");
     let preview_body = preview_container.querySelector(".preview-body");
-
-    fitContainer(preview_body, win_clone);  // fit the new window inside the preview body
 
     preview_body.appendChild(win_clone);  // add the cloned window to the body of the preview container
 
@@ -84,6 +82,9 @@ function add_preview(response_of_temp, ctx, win) {
 
     // add the preview container into the app-previews container for this given context.
     app_previews.appendChild(preview_container);
+
+    // Once everything has now been added to the screen in which the css values are now set up
+    fitContainer(preview_body, win_clone);  // fit the new window inside the preview body
 }
 
 
@@ -96,19 +97,27 @@ function fitContainer(container, element) {
     let container_style = getComputedStyle(container);
     let element_style = getComputedStyle(element);
 
-    console.log(container_style, element_style);
+    let el_width = stripUnit(element_style.width);
+    let el_height = stripUnit(element_style.height);
+    let con_width = stripUnit(container_style.width);
+    let con_height = stripUnit(container_style.height);
 
-    element.setAttribute("style", `
-        transform: scale(
-            ${element_style.width / container_style.width},
-            ${element_style.height / container_style.height}
-        );
-
+    element.style.cssText += `
         position: relative;
+        transform: scale(${con_width / el_width}, ${con_height / el_height});
+        left: ${(con_width - el_width) / 2}px;
+        top: ${(con_height - el_height) / 2}px;
+    `;
+}
 
-        left: ${(container_style.width - element_style.width) / 2}px;
-        top: ${(container_style.height - element_style.height) / 2}px;
-    `);
+
+/**
+ * Strips any unit off of a given style value, and parses the result to a float.
+ * i.e. '11.1px' becomes 11.1 <float>
+ * @param {string} value The value to strip and convert.
+ */
+function stripUnit(value) {
+    return parseFloat(value.substring(0, value.length - 2));
 }
 
 
