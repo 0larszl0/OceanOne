@@ -39,8 +39,8 @@
 .app-previews {
     position: absolute;
 
-    width: fit-content; /*425%;*/
-    height: fit-content; /*375%;*/
+    width: 375%;
+    height: 375%;
     padding: 10px;
     border-radius: 3px;
 
@@ -55,6 +55,7 @@
 }
 
 #app-label {
+    position: relative;
     top: 85%;
 }
 

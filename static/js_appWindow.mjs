@@ -25,23 +25,11 @@ async function createWindow(ctx, window_group) {
     addFunctionalities(new_window);
     window_group.appendChild(new_window);
 
-    // add a preview of the created app preview list.
-    let app_previews = document.getElementById(ctx).querySelector(".app-previews");
-    let window_clone = new_window.cloneNode(true);
-    window_clone.classList = "";
-    let window_style = getComputedStyle(new_window);
-    console.log(window_style, window_style.backgroundColor);
-
-    window_clone.setAttribute("style", `
-        width: ${window_style.width};
-        height: ${window_style.height};
-        background: ${window_style.backgroundColor};
-    `);
-    app_previews.appendChild(window_clone);
-
-
-
-
+    await bodiedFetch(
+        "/get-preview-template",
+        {},
+        add_preview, ctx, new_window
+    )
 }
 
 /**
@@ -51,6 +39,76 @@ async function createWindow(ctx, window_group) {
  */
 function add_src(src, element) {
     element.innerHTML = src["windowHTML"];
+}
+
+
+/**
+ * Adds a preview for a new window.
+ * @param {HTMLDivElement} win The new window
+ */
+function add_preview(response_of_temp, ctx, win) {
+    // -- Add the template of the preview into a container --
+    // create a div to contain the preview template
+    let preview_container = document.createElement("div");
+
+    // add the template to the div and assign any classes too.
+    preview_container.innerHTML = response_of_temp["previewHTML"];
+    preview_container.classList.add("preview-container");
+
+    // -- Clone the window we are creating to show a preview of it --
+    let win_clone = win.cloneNode(true);
+
+    win_clone.classList = "";  // remove any classes that were attached to the created window.
+    let win_style = getComputedStyle(win);  // Get the styles contained in the new window to use similar values.
+
+    // Set some essential styles that make it look identical to the window we are previewing
+    win_clone.setAttribute("style", `
+        width: ${win_style.width};
+        height: ${win_style.height};
+        background: ${win_style.backgroundColor};
+    `);
+
+    let app_previews = document.getElementById(ctx).querySelector(".app-previews");
+    let preview_body = preview_container.querySelector(".preview-body");
+
+    fitContainer(preview_body, win_clone);  // fit the new window inside the preview body
+
+    preview_body.appendChild(win_clone);  // add the cloned window to the body of the preview container
+
+    // -- Adjust headers of the preview container --
+    // - Make the title the same as the context -
+    preview_container.querySelector(".preview-title").innerText = ctx;
+
+    // -- Ensure the app label is hidden --
+    document.getElementById("app-label").classList.add("hidden");  // classList is like a set, where even if you add the same class again, it won't repeat.
+
+    // add the preview container into the app-previews container for this given context.
+    app_previews.appendChild(preview_container);
+}
+
+
+/**
+ * Scales an element's dimensions to match the containers, while also retaining position.
+ * @param {HTMLDivElement} container The container the element will fit to
+ * @param {HTMLDivElement} element The element to fit in the container
+ */
+function fitContainer(container, element) {
+    let container_style = getComputedStyle(container);
+    let element_style = getComputedStyle(element);
+
+    console.log(container_style, element_style);
+
+    element.setAttribute("style", `
+        transform: scale(
+            ${element_style.width / container_style.width},
+            ${element_style.height / container_style.height}
+        );
+
+        position: relative;
+
+        left: ${(container_style.width - element_style.width) / 2}px;
+        top: ${(container_style.height - element_style.height) / 2}px;
+    `);
 }
 
 

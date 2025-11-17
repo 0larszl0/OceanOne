@@ -9,6 +9,7 @@ OceanOne
 <link rel="stylesheet" href="{{ url_for('static', filename='css_desktop.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_windows.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_weatherWidget.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_appPreview.css') }}">
 {% endblock stylesheets %}
 
 {% block scripts %}
@@ -69,7 +70,7 @@ OceanOne
 
             <div id="email" class="app">
                 <div class="app-previews">
-                    <span id="app-label">Mail</span>
+                    <span id="app-label">Email</span>
                 </div>
                 <div class="app-icon">
                     <button onclick="toggleWindow('email')">[Mail]</button>
