@@ -4,17 +4,22 @@
 
 
 async function updateWeather() {
+    const widget = document.getElementById("weather-widget");
+    if (widget) widget.classList.add("loading");
+
     await bodiedFetch(
         "/get-weather",
-        {"temp_kind": "C"},  // change temp_kind to 'F' if value is to be in Fahrenheit instead of Celsius
-        x
+        { temp_kind: "C" },
+        (weather_details) => {
+            x(weather_details);
+            if (widget) widget.classList.remove("loading");
+        }
     );
 }
 
 function x(weather_details){
     let temp_span = document.getElementById("temperature-val");
     let temp_sym_span = document.getElementById("temperature-unit");
-
     let location_span = document.getElementById("location");
 
     temp_span.innerText = weather_details["temperature"];
@@ -22,6 +27,5 @@ function x(weather_details){
     location_span.innerText = `${weather_details['city']}, ${weather_details['region']}`;
 
     console.log(weather_details);
-    console.log(weather_details.json());
 }
 

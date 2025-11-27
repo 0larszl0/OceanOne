@@ -13,6 +13,15 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_utils.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
 
+<script type="text/javascript">
+  // Run once when the desktop page is fully loaded
+  window.addEventListener('load', function () {
+    if (typeof updateWeather === 'function') {
+      updateWeather();
+    }
+  });
+</script>
+
 <script>
     function openEmailWindow() {
         const win = document.getElementById("email-window");
@@ -122,16 +131,17 @@ OceanOne
     <div id="main-screen">
         <div id="weather-widget">
             <div id="temperature-container">
-                <span id="temperature-val">X</span>
+                <span id="temperature-val"></span>
                 <span id="temperature-sym">°</span>
-                <span id="temperature-unit">C</span>
-            </div>
+                <span id="temperature-unit"></span>
+            </div> 
             <div id="weather-icon"></div>
             <div id="location-container">
-                <span id="location">City, Country</span>
+                <span id="location"></span>
             </div>
             <div id="weather-details"></div>
         </div>
+
         <div id="email-window" class="app-window hidden">
             <div class="title-bar">
                 <span>Email</span>
