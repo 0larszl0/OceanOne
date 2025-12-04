@@ -8,8 +8,20 @@
 
     margin-bottom: 3px;
 
-    width: fit-content;
+    width: 100%;
     height: fit-content;
+}
+
+.preview-title {
+    color: white;
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 100%;
+    gap: 5px;
 }
 
 .preview-body {

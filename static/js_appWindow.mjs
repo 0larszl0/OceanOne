@@ -22,6 +22,7 @@ async function createWindow(ctx, window_group) {
 
     // Add any classes and functionalities before adding the element into the group (and also the screen)
     new_window.classList.add("app-window");
+    new_window.id = `${window_group.id.split('-')[0]}-window-${window_group.childElementCount}`
     addFunctionalities(new_window);
     window_group.appendChild(new_window);
 
@@ -41,6 +42,19 @@ async function createWindow(ctx, window_group) {
  */
 function add_src(src, element) {
     element.innerHTML = src["windowHTML"];
+
+    // - Assigns relevant event actions to the buttons within the title bar of the window.
+    let window_actions = element.querySelector(".title-bar").getElementsByTagName("button");
+    for (var i = 0; i < window_actions.length; i++) {
+        let button_action = window_actions[i];
+
+        switch (button_action.innerText) {
+            case '×':
+                button_action.addEventListener('click', (e) => closeWindow(e));
+                break;
+        }
+    }
+
 }
 
 
@@ -56,6 +70,20 @@ function add_preview(response_of_temp, ctx, win) {
     // add the template to the div and assign any classes too.
     preview_container.innerHTML = response_of_temp["previewHTML"];
     preview_container.classList.add("preview-container");
+    let split_win_id = win.id.split('-')
+    preview_container.id = `${ctx}-preview-${split_win_id[split_win_id.length - 1]}`  // '[ctx]-preview-[windowID]'
+
+    // Add an event listener to the buttons inside the preview.
+    let preview_actions = preview_container.querySelector(".preview-actions");
+    for (var i = 0; i < preview_actions.childElementCount; i++) {
+        current_child = preview_actions.children[i];
+
+        switch (current_child.innerText) {
+            case 'x':
+                current_child.addEventListener('click', (e) => closePreview(e));
+                break;
+        }
+    }
 
     // -- Clone the window we are creating to show a preview of it --
     let win_clone = win.cloneNode(true);
@@ -73,7 +101,7 @@ function add_preview(response_of_temp, ctx, win) {
         background-color: ${win_style.backgroundColor};
     `);
 
-    let app_previews = document.getElementById(ctx).querySelector(".app-previews");
+    let app_previews = document.getElementById(`${ctx}-app`).querySelector(".app-previews");
     let preview_body = preview_container.querySelector(".preview-body");
 
     preview_body.appendChild(win_clone);  // add the cloned window to the body of the preview container
@@ -236,4 +264,32 @@ function addFunctionalities(win) {
         document.removeEventListener("mousemove", onResize);
         document.removeEventListener("mouseup", stopResize);
     }
+}
+
+
+/**
+ * Removes a window and its preview from the document.
+ * @param {string} ctx The context of the window/ the type of window that is being removed.
+ */
+function closeWindow(event) {
+    console.log(event.target)
+    // Get the window holding the button
+    let app_window = event.target.parentNode.parentNode;
+    console.log(app_window);
+
+    // Get the previews list of the app corresponding to the window
+    let split_win_id = app_window.id.split('-');
+    let app_previews = document.getElementById(`${split_win_id[0]}-app`).querySelector(".app-previews");
+    console.log(app_previews);
+
+    // Remove the preview that matches the id of the window
+    app_previews.removeChild(document.getElementById(`${split_win_id[0]}-preview-${split_win_id[split_win_id.length - 1]}`));
+
+    // Get the group that this window is in and remove the window from it.
+    app_window.parentNode.removeChild(app_window);
+}
+
+
+function closePreview(event) {
+    console.log(event)
 }
