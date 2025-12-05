@@ -1,6 +1,11 @@
 .preview-container {
-    width: 100%;
-    height: 100%;
+    width: 20vw;
+    height: 20vh;
+
+    display: flex;
+    flex-flow: column;
+
+    margin: 0 5px;
 }
 
 .preview-header {
@@ -25,7 +30,7 @@
 }
 
 .preview-body {
-    height: 90%;
+    height: 100%;
     border-radius: 5px;
     border: 1px solid transparent;
 

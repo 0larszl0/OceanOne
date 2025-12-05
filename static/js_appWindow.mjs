@@ -1,3 +1,7 @@
+/* --- GLOBALS --- */
+id = 0
+
+
 /* --- Window Factory --- */
 
 /**
@@ -22,7 +26,7 @@ async function createWindow(ctx, window_group) {
 
     // Add any classes and functionalities before adding the element into the group (and also the screen)
     new_window.classList.add("app-window");
-    new_window.id = `${window_group.id.split('-')[0]}-window-${window_group.childElementCount}`
+    new_window.id = `${window_group.id.split('-')[0]}-window-${id}`;
     addFunctionalities(new_window);
     window_group.appendChild(new_window);
 
@@ -32,7 +36,7 @@ async function createWindow(ctx, window_group) {
         add_preview, ctx, new_window
     )
 
-    new_window.classList.add("hidden");  // adds the hidden class at the end, because the clone in the preview may need to use the display attribute
+    id += 1;
 }
 
 /**
@@ -70,8 +74,7 @@ function add_preview(response_of_temp, ctx, win) {
     // add the template to the div and assign any classes too.
     preview_container.innerHTML = response_of_temp["previewHTML"];
     preview_container.classList.add("preview-container");
-    let split_win_id = win.id.split('-')
-    preview_container.id = `${ctx}-preview-${split_win_id[split_win_id.length - 1]}`  // '[ctx]-preview-[windowID]'
+    preview_container.id = `${ctx}-preview-${id}`
 
     // Add an event listener to the buttons inside the preview.
     let preview_actions = preview_container.querySelector(".preview-actions");
@@ -79,6 +82,10 @@ function add_preview(response_of_temp, ctx, win) {
         current_child = preview_actions.children[i];
 
         switch (current_child.innerText) {
+            case '+':
+                current_child.addEventListener("click", async function() {await createWindow(ctx, win.parentNode);})
+                break;
+
             case 'x':
                 current_child.addEventListener('click', (e) => closePreview(e));
                 break;
@@ -87,19 +94,17 @@ function add_preview(response_of_temp, ctx, win) {
 
     // -- Clone the window we are creating to show a preview of it --
     let win_clone = win.cloneNode(true);
-
     win_clone.classList = "";  // remove any classes that were attached to the created window.
+
+    // Set some essential styles.
     let win_style = getComputedStyle(win);  // Get the styles contained in the new window to use similar values.
 
-    // Set some essential styles that make it look identical to the window we are previewing
-    win_clone.setAttribute("style", `
-        display: ${win_style.display};
-        flex-flow: ${win_style.flexFlow};
-
-        width: ${win_style.width};
-        height: ${win_style.height};
+    win_clone.style.cssText += `
+        position: relative;
+        transform: scale(0.85, 0.9);
+        height: 100%;
         background-color: ${win_style.backgroundColor};
-    `);
+    `;
 
     let app_previews = document.getElementById(`${ctx}-app`).querySelector(".app-previews");
     let preview_body = preview_container.querySelector(".preview-body");
@@ -108,58 +113,13 @@ function add_preview(response_of_temp, ctx, win) {
 
     // -- Adjust headers of the preview container --
     // - Make the title the same as the context -
-    preview_container.querySelector(".preview-title").innerText = capitalise(ctx);
+    preview_container.querySelector(".preview-title").innerText = ctx[0].toUpperCase() + ctx.substring(1);
 
     // -- Ensure the app label is hidden --
     document.getElementById("app-label").classList.add("hidden");  // classList is like a set, where even if you add the same class again, it won't repeat.
 
     // add the preview container into the app-previews container for this given context.
     app_previews.appendChild(preview_container);
-
-    // Once everything has now been added to the screen in which the css values are now set up
-    fitContainer(preview_body, win_clone);  // fit the new window inside the preview body
-}
-
-
-/**
- * Scales an element's dimensions to match the containers, while also retaining position.
- * @param {HTMLDivElement} container The container the element will fit to
- * @param {HTMLDivElement} element The element to fit in the container
- */
-function fitContainer(container, element) {
-    let container_style = getComputedStyle(container);
-    let element_style = getComputedStyle(element);
-
-    let el_width = stripUnit(element_style.width);
-    let el_height = stripUnit(element_style.height);
-    let con_width = stripUnit(container_style.width);
-    let con_height = stripUnit(container_style.height);
-
-    element.style.cssText += `
-        position: relative;
-        transform: scale(${(con_width / el_width) * 0.85}, ${(con_height / el_height) * 0.9});
-        left: ${(con_width - el_width) / 2}px;
-        top: ${(con_height - el_height) / 2}px;
-    `;
-}
-
-
-/**
- * Strips any unit off of a given style value, and parses the result to a float.
- * i.e. '11.1px' becomes 11.1 <float>
- * @param {string} value The value to strip and convert.
- */
-function stripUnit(value) {
-    return parseFloat(value.substring(0, value.length - 2));
-}
-
-
-/**
- * Capitalises some text, i.e. email -> Email.
- * @param {string} text The text to capitalise.
- */
-function capitalise(text) {
-    return text[0].toUpperCase() + text.substring(1);
 }
 
 
@@ -181,12 +141,18 @@ async function toggleWindow(ctx) {
 
         window_container.appendChild(window_group);  // append the new group into the window container
         await createWindow(ctx, window_group);  // wait till the new window has been created before continuing.
+
+        return null;
     }
 
-    if (window_group.childElementCount == 1) {  // if there's only one window for this group
-        // toggle the visibility of that window
+    if (window_group.childElementCount >= 1) {  // if there's only one window for this group
         window_group.firstChild.classList.toggle("hidden");
+
+        return null;
     }
+
+    // When a group exists but it's empty
+    await createWindow(ctx, window_group);
 }
 
 
@@ -269,7 +235,7 @@ function addFunctionalities(win) {
 
 /**
  * Removes a window and its preview from the document.
- * @param {string} ctx The context of the window/ the type of window that is being removed.
+ * @param {Event} event The click event on the close-btn class within the title bar of a window.
  */
 function closeWindow(event) {
     console.log(event.target)
@@ -290,6 +256,22 @@ function closeWindow(event) {
 }
 
 
+/**
+ * Removes a preview and its associated window from the document. This is essentially does the same as closeWindow but in reverse order.
+ * @param {Event} event The click event on the close-button class within the preview actions bar.
+ */
 function closePreview(event) {
-    console.log(event)
+    console.log(event.target)
+    // Get the preview holding this button's action
+    let preview = event.target.parentNode.parentNode.parentNode;
+
+    // Get the group related to the context of the preview.
+    let split_preview_id = preview.id.split('-');
+    let ctx_group = document.getElementById(`${split_preview_id[0]}-group`);
+
+    // Remove the window related to the preview.
+    ctx_group.removeChild(document.getElementById(`${split_preview_id[0]}-window-${split_preview_id[split_preview_id.length - 1]}`));
+
+    // Remove the preview
+    preview.parentNode.removeChild(preview);
 }
