@@ -23,7 +23,6 @@
     color: white;
     padding: 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     cursor: move;
@@ -37,12 +36,40 @@
     height: 100%;
 }
 
-.close-btn {
-    background: red;
-    border: none;
-    color: white;
+.window-title {
+    width: fit-content;
+}
+
+.window-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 2%;
+}
+
+.window-actions button {
     cursor: pointer;
-    padding: 2px 7px;
+    border-radius: 3px;
+    color: white;
+    border: 1px solid transparent;
+    width: 7%;  /* This is so that each button has the same width as each other */
+}
+
+.close-btn {
+    background: rgb(210, 0, 0);
+}
+
+.close-btn:hover {
+    border: 1px solid red;
+}
+
+.minimise-btn {
+    background: transparent;
+}
+
+.minimise-btn:hover {
+    border: 1px solid rgb(5, 180, 239);
 }
 
 .resize-handle {
