@@ -16,7 +16,7 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_utils.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
-<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_app.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_onload.mjs') }}"></script>
 
 <!--&lt;!&ndash; Update weather on load &ndash;&gt;-->
 <!--<script type="text/javascript">-->
@@ -40,21 +40,6 @@ OceanOne
         "Gaining persistence on startup...",
         "Uploading session data to remote server..."
     ];
-
-    function openEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) {
-            win.classList.remove("hidden");
-            win.style.display = "flex";
-        }
-    }
-
-    function closeEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) {
-            win.classList.add("hidden");
-        }
-    }
 
     function triggerFakeHack(event) {
         if (event) event.preventDefault();
@@ -157,81 +142,6 @@ OceanOne
         });
     }
 
-    function makeWindowDraggableAndResizable(win) {
-        const titleBar     = win.querySelector(".title-bar");
-        const resizeHandle = win.querySelector(".resize-handle");
-
-        if (!titleBar || !resizeHandle) return;
-
-        /* Dragging */
-        let isDragging = false;
-        let dragOffsetX = 0;
-        let dragOffsetY = 0;
-
-        titleBar.addEventListener("mousedown", (e) => {
-            isDragging = true;
-            const rect = win.getBoundingClientRect();
-            dragOffsetX = e.clientX - rect.left;
-            dragOffsetY = e.clientY - rect.top;
-
-            document.addEventListener("mousemove", onDrag);
-            document.addEventListener("mouseup", stopDrag);
-        });
-
-        function onDrag(e) {
-            if (!isDragging) return;
-
-            const newLeft = e.clientX - dragOffsetX;
-            const newTop  = e.clientY - dragOffsetY;
-
-            win.style.left = newLeft + "px";
-            win.style.top  = newTop  + "px";
-        }
-
-        function stopDrag() {
-            isDragging = false;
-            document.removeEventListener("mousemove", onDrag);
-            document.removeEventListener("mouseup", stopDrag);
-        }
-
-        /* Resizing  */
-        let isResizing = false;
-        let startWidth, startHeight, startX, startY;
-
-        resizeHandle.addEventListener("mousedown", (e) => {
-            e.stopPropagation();
-            isResizing = true;
-
-            const rect = win.getBoundingClientRect();
-            startWidth  = rect.width;
-            startHeight = rect.height;
-            startX = e.clientX;
-            startY = e.clientY;
-
-            document.addEventListener("mousemove", onResize);
-            document.addEventListener("mouseup", stopResize);
-        });
-
-        function onResize(e) {
-            if (!isResizing) return;
-
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-
-            const newWidth  = Math.max(250, startWidth  + dx);
-            const newHeight = Math.max(150, startHeight + dy);
-
-            win.style.width  = newWidth  + "px";
-            win.style.height = newHeight + "px";
-        }
-
-        function stopResize() {
-            isResizing = false;
-            document.removeEventListener("mousemove", onResize);
-            document.removeEventListener("mouseup", stopResize);
-        }
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
         const emailWin = document.getElementById("email-window");
         if (emailWin) {
@@ -278,10 +188,10 @@ OceanOne
 
         <!-- EMAIL WINDOW WITH PHISHING TASK -->
         <div id="email-window" class="app-window hidden">
-            <div class="title-bar">
-                <span>Email – Inbox (3)</span>
-                <button class="close-btn" onclick="closeEmailWindow()">×</button>
-            </div>
+<!--            <div class="title-bar">-->
+<!--                <span>Email – Inbox (3)</span>-->
+<!--                <button class="close-btn" onclick="closeEmailWindow()">×</button>-->
+<!--            </div>-->
 
             <div class="window-body email-layout">
                 <!-- Left side: inbox list -->
@@ -446,10 +356,8 @@ OceanOne
                 <pre id="hacker-log"></pre>
             </div>
         </div>
-    </div>
 
         <div id="window-container"></div>
-
     </div>
 
     <div id="taskbar">
