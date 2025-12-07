@@ -1,0 +1,95 @@
+/* ------- Window Toggle States ------- */
+
+.hidden {
+    display: none !important;
+}
+
+.focussed-window {
+    z-index: 1000;
+}
+
+/* ------- Window Styles ------- */
+
+.app-window {
+    position: absolute;
+    top: 120px;
+    left: 120px;
+    width: 400px;
+    height: 260px;
+    background: #ffffff;
+    border: 2px solid #222;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+    display: flex;
+    flex-flow: column;
+}
+
+.title-bar {
+    background: #333;
+    color: white;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+
+    cursor: move;
+    user-select: none;
+
+    height: fit-content;
+}
+
+.window-body {
+    padding: 12px;
+    height: 100%;
+}
+
+.window-title {
+    width: fit-content;
+}
+
+.window-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 2%;
+}
+
+.window-actions button, .new-win-btn {
+    cursor: pointer;
+    border-radius: 3px;
+    color: white;
+    border: 1px solid transparent;
+    width: 7%;  /* This is so that each button has the same width as each other */
+}
+
+.close-btn {
+    background: rgb(210, 0, 0);
+}
+
+.close-btn:hover {
+    border: 1px solid red;
+}
+
+.new-win-btn {
+    width: auto;
+}
+
+.minimise-btn, .new-win-btn {
+    background: transparent;
+}
+
+.minimise-btn:hover, .new-win-btn:hover {
+    border: 1px solid rgb(5, 180, 239);
+}
+
+.resize-handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    right: 4px;
+    bottom: 4px;
+    cursor: se-resize;
+    background: #ccc;
+    border-radius: 3px;
+}

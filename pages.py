@@ -10,6 +10,22 @@ def home() -> str:
     return render_template("pages/desktop.html")
 
 
+@BP.route('/get-window', methods=["POST"])
+def get_window() -> Response:
+    """Extract html data of a window of a given context."""
+
+    ctx = request.get_json()["ctx"]
+
+    # uses render_template so the Jinja is parsed properly beforehand.
+    return jsonify({"windowHTML": render_template(f"windows/{ctx}_window.html")})
+
+
+@BP.route("/get-preview-template", methods=["POST"])
+def get_preview_template() -> Response:
+    """Get the html containing the template for an app-preview."""
+    return jsonify({"previewHTML": render_template("app_preview_base.html")})
+
+
 @BP.route("/get-weather", methods=["POST"])
 async def get_weather() -> Response:
     """Gets weather information based on the users current location."""

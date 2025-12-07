@@ -1,0 +1,29 @@
+#weather-widget {
+    position: relative;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 45%;
+    height: 40%;
+}
+
+#temperature-container, #location {
+    position: relative;
+    display: flex;  /* Removes the whitespace between the span texts. */
+    width: fit-content;
+}
+
+#temperature {
+    font-size: 50px;
+}
+
+#temperature-sym {
+    font-size: 34px;
+}
+
+#temperature-unit {
+    font-size: 25px;
+    transform: translateY(1vh);
+}

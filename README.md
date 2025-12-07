@@ -1,7 +1,11 @@
 # OceanOne
 Cybersecurity Engagement Concept
 
+### Features
+These are the features that are currently being in-development or have been developed:
 
+- **[In-Development]** Weather forecast widget
+- **[In-Development]** Multi-Window availability
 
 
 ### Libraries

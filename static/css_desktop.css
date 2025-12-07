@@ -1,3 +1,8 @@
+#main-screen {
+    position: relative;
+    height: inherit;
+}
+
 #main-container {
     display: flex;
     flex-flow: column;
@@ -15,7 +20,6 @@
 
 #taskbar-apps {
     position: relative;
-    margin: 1%;
     display: flex;
     flex-flow: row;
 
@@ -23,106 +27,35 @@
     justify-content: center;
 }
 
+.app {
+    position: relative;
+
+    width: 6%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.app-label {
+    position: relative;
+    top: 85%;
+}
+
 .app-icon {
     position: relative;
 
-    width: max-content;
-    height: max-content;
-
     top: 50%;
     transform: translateY(-50%);
+
+    height: 100%;
+    width: 100%;
 }
 
-#main-screen {
-    position: relative;
-    height: inherit;
+.app-icon button {
+    height: 100%;
+    width: 100%;
 }
 
-/* ------- */
+.app-icon button:hover {
 
-#weather-widget {
-    position: relative;
-
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 45%;
-    height: 40%;
-}
-
-#temperature-container, #location {
-    position: relative;
-    display: flex;  /* Removes the whitespace between the span texts. */
-    width: fit-content;
-}
-
-#temperature {
-    font-size: 50px;
-}
-
-#temperature-sym {
-    font-size: 34px;
-}
-
-#temperature-unit {
-    font-size: 25px;
-    transform: translateY(1vh);
-}
-
-.app-window {
-    position: absolute;
-    top: 120px;
-    left: 120px;
-    width: 400px;
-    height: 260px;
-    background: #ffffff;
-    border: 2px solid #222;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 10;
-}
-
-.hidden {
-    display: none;
-}
-
-.title-bar {
-    background: #333;
-    color: white;
-    padding: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    cursor: move;
-    user-select: none;
-}
-
-
-.window-body {
-    padding: 12px;
-}
-
-.close-btn {
-    background: red;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 2px 7px;
-}
-
-#main-screen {
-    position: relative;
-}
-
-.resize-handle {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    right: 4px;
-    bottom: 4px;
-    cursor: se-resize;
-    background: #ccc;
-    border-radius: 3px;
 }

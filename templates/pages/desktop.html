@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'page_base.html' %}
 
 {% block title %}
 OceanOne
@@ -7,114 +7,16 @@ OceanOne
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css_universal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_desktop.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_windows.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_weatherWidget.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_appPreview.css') }}">
 {% endblock stylesheets %}
 
 {% block scripts %}
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_utils.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
-
-<script>
-    function openEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) {
-            win.classList.remove("hidden");
-        }
-    }
-
-    function closeEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) {
-            win.classList.add("hidden");
-        }
-    }
-</script>
-
-<script>
-    function openEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) win.classList.remove("hidden");
-    }
-
-    function closeEmailWindow() {
-        const win = document.getElementById("email-window");
-        if (win) win.classList.add("hidden");
-    }
-
-    function makeWindowDraggableAndResizable(win) {
-        const titleBar = win.querySelector(".title-bar");
-        const resizeHandle = win.querySelector(".resize-handle");
-
-        let isDragging = false;
-        let dragOffsetX = 0;
-        let dragOffsetY = 0;
-
-        titleBar.addEventListener("mousedown", (e) => {
-            isDragging = true;
-            const rect = win.getBoundingClientRect();
-            dragOffsetX = e.clientX - rect.left;
-            dragOffsetY = e.clientY - rect.top;
-
-            document.addEventListener("mousemove", onDrag);
-            document.addEventListener("mouseup", stopDrag);
-        });
-
-        function onDrag(e) {
-            if (!isDragging) return;
-            win.style.left = (e.clientX - dragOffsetX) + "px";
-            win.style.top  = (e.clientY - dragOffsetY) + "px";
-        }
-
-        function stopDrag() {
-            isDragging = false;
-            document.removeEventListener("mousemove", onDrag);
-            document.removeEventListener("mouseup", stopDrag);
-        }
-
-        let isResizing = false;
-        let startWidth, startHeight, startX, startY;
-
-        resizeHandle.addEventListener("mousedown", (e) => {
-            e.stopPropagation();
-            isResizing = true;
-
-            const rect = win.getBoundingClientRect();
-            startWidth  = rect.width;
-            startHeight = rect.height;
-            startX = e.clientX;
-            startY = e.clientY;
-
-            document.addEventListener("mousemove", onResize);
-            document.addEventListener("mouseup", stopResize);
-        });
-
-        function onResize(e) {
-            if (!isResizing) return;
-
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-
-            const newWidth  = Math.max(250, startWidth  + dx);
-            const newHeight = Math.max(150, startHeight + dy);
-
-            win.style.width  = newWidth  + "px";
-            win.style.height = newHeight + "px";
-        }
-
-        function stopResize() {
-            isResizing = false;
-            document.removeEventListener("mousemove", onResize);
-            document.removeEventListener("mouseup", stopResize);
-        }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-        const emailWin = document.getElementById("email-window");
-        if (emailWin) {
-            makeWindowDraggableAndResizable(emailWin);
-        }
-    });
-</script>
-
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_app.mjs') }}"></script>
 {% endblock scripts %}
 
 {% block main %}
@@ -152,26 +54,28 @@ OceanOne
             </div>
         </div>
 
-        <div id="email-window" class="app-window hidden">
-            <div class="title-bar">
-                <span>Email</span>
-                <button class="close-btn" onclick="closeEmailWindow()">×</button>
-            </div>
-            <div class="window-body">
-                <p>Email app coming soon...</p>
-            </div>
+        <div id="window-container"></div>
 
-            <div class="resize-handle"></div>
-        </div>
     </div>
 
     <div id="taskbar">
         <div id="taskbar-apps">
-            <div class="app-icon">
-                <button onclick="updateWeather();">Click ME!</button>
+            <div class="app">
+                <div class="app-preview">
+                </div>
+                <div class="app-icon">
+                    <button onclick="updateWeather();">Click ME!</button>
+                </div>
             </div>
-            <div class="app-icon">
-                <button onclick="openEmailWindow()">Mail</button>
+
+            <div id="email-app" class="app">
+                <div class="app-previews hidden">
+                    <span id="email-label" class="app-label">Email</span>
+                    <button class="new-win-btn hidden">+</button>
+                </div>
+                <div class="app-icon">
+                    <button onclick="toggleWindow('email')">[Mail]</button>
+                </div>
             </div>
         </div>
     </div>
