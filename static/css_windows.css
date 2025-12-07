@@ -1,3 +1,15 @@
+/* ------- Window Toggle States ------- */
+
+.hidden {
+    display: none !important;
+}
+
+.focussed-window {
+    z-index: 1000;
+}
+
+/* ------- Window Styles ------- */
+
 .app-window {
     position: absolute;
     top: 120px;
@@ -8,14 +20,9 @@
     border: 2px solid #222;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 10;
 
     display: flex;
     flex-flow: column;
-}
-
-.hidden {
-    display: none;
 }
 
 .title-bar {
@@ -48,7 +55,7 @@
     gap: 2%;
 }
 
-.window-actions button {
+.window-actions button, .new-win-btn {
     cursor: pointer;
     border-radius: 3px;
     color: white;
@@ -64,11 +71,15 @@
     border: 1px solid red;
 }
 
-.minimise-btn {
+.new-win-btn {
+    width: auto;
+}
+
+.minimise-btn, .new-win-btn {
     background: transparent;
 }
 
-.minimise-btn:hover {
+.minimise-btn:hover, .new-win-btn:hover {
     border: 1px solid rgb(5, 180, 239);
 }
 

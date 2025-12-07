@@ -8,17 +8,10 @@ window.onload = function() {
     let apps = document.getElementsByClassName("app");
 
     for (var i = 0; i < apps.length; i++) {
-        apps[i].addEventListener("mouseover", function(event) {  // When you hover over the app button
-            console.log("Hovering");
-            let app_previews = this.querySelector(".app-previews");
+        // When you hover over the app button
+        apps[i].addEventListener("mouseover", function(event) { this.querySelector(".app-previews").classList.remove("hidden"); });
 
-            app_previews.setAttribute("style", "visibility: visible;")  // make the preview visible
-        });
-
-        apps[i].addEventListener("mouseout", function(event) {  // When the mouse leaves the app family
-            let app_previews = this.querySelector(".app-previews");
-
-            app_previews.setAttribute("style", "visibility: hidden;")  // hide the preview.
-        });
+        // When the mouse leaves the app previews
+        apps[i].addEventListener("mouseout", function(event) { this.querySelector(".app-previews").classList.add("hidden"); });
     }
 }

@@ -1,6 +1,5 @@
 /* --- GLOBALS --- */
-var id = 0
-var active_windows = {}
+var id = 0;
 
 
 /* --- Window Factory --- */
@@ -37,10 +36,7 @@ async function createWindow(ctx, window_group) {
         add_preview, ctx, new_window
     )
 
-    // Add window to active windows list.
-    if (active_windows[ctx] == null) { active_windows[ctx] = []; }
-    active_windows[ctx].push(new_window)
-
+    setSelectedWindow(new_window, ctx);
     id += 1;
 }
 
@@ -60,7 +56,7 @@ function add_src(src, win) {
 
         switch (button_action.innerText) {
             case '_':
-                button_action.addEventListener("click", (_) => win.classList.toggle("hidden"));
+                button_action.addEventListener("click", (_) => { win.classList.toggle("hidden"); });
                 break;
 
             case '×':
@@ -68,7 +64,6 @@ function add_src(src, win) {
                 break;
         }
     }
-
 }
 
 
@@ -94,10 +89,6 @@ function add_preview(response_of_temp, ctx, win) {
         current_child = preview_actions.children[i];
 
         switch (current_child.innerText) {
-            case '+':
-                current_child.addEventListener("click", async function() {await createWindow(ctx, win.parentNode);})
-                break;
-
             case 'x':
                 current_child.addEventListener('click', (e) => closePreview(e));
                 break;
@@ -112,6 +103,9 @@ function add_preview(response_of_temp, ctx, win) {
     let win_style = getComputedStyle(win);  // Get the styles contained in the new window to use similar values.
 
     win_clone.style.cssText += `
+        display: flex;
+        flex-flow: column;
+
         position: relative;
         transform: scale(0.85, 0.9);
         height: 100%;
@@ -124,7 +118,10 @@ function add_preview(response_of_temp, ctx, win) {
     preview_body.appendChild(win_clone);  // add the cloned window to the body of the preview container
 
     // Add an event listener to the preview body that toggles its corresponding window.
-    preview_body.addEventListener("click", (_) => win.classList.toggle("hidden"));
+    preview_body.addEventListener("click", async function() {
+        setSelectedWindow(win, ctx);
+        app_previews.classList.add("hidden");
+    });
 
     // -- Adjust headers of the preview container --
     // - Make the title the same as the context -
@@ -133,8 +130,11 @@ function add_preview(response_of_temp, ctx, win) {
     // -- Ensure the app label is hidden --
     document.getElementById(`${ctx}-label`).classList.add("hidden");  // classList is like a set, where even if you add the same class again, it won't repeat.
 
-    // add the preview container into the app-previews container for this given context.
-    app_previews.appendChild(preview_container);
+    // -- Make the new window button appear --
+    app_previews.querySelector(".new-win-btn").classList.remove("hidden");
+
+    // insert the preview container into the app-previews container, before the new window button.
+    app_previews.insertBefore(preview_container, app_previews.childNodes[app_previews.childElementCount - 1]);
 }
 
 
@@ -149,7 +149,6 @@ async function toggleWindow(ctx) {
     let window_group = document.getElementById(`${ctx}-group`);
 
     if (window_group == null) {  // if there is no window group for this context
-        // then create one-
         window_group = document.createElement("div");
         window_group.id = `${ctx}-group`;
         window_group.classList.add("window-group");
@@ -157,12 +156,14 @@ async function toggleWindow(ctx) {
         window_container.appendChild(window_group);  // append the new group into the window container
         await createWindow(ctx, window_group);  // wait till the new window has been created before continuing.
 
+        document.getElementById(`${ctx}-app`).querySelector(".new-win-btn").addEventListener("click", async function(_) {createWindow(ctx, window_group);});
+
         return null;
     }
 
     if (window_group.childElementCount >= 1) {  // when there's more than one child in the group of windows
         // toggle the window that's at the front of the active windows list for that context.
-        active_windows[ctx][0].classList.toggle("hidden");
+        document.getElementById("window-container").querySelector(".focussed-window").classList.toggle("hidden");
 
         return null;
     }
@@ -175,19 +176,41 @@ async function toggleWindow(ctx) {
 /* Window Functionality */
 
 /**
+ * Keeps track of the currently selected window, for a given context, and appropriately adds and removes the top-layer
+ * class from the old and the newly selected window.
+ * @param {HTMLDivElement} win The newly selected window.
+ * @param {string} ctx The context of that window.
+ */
+function setSelectedWindow(win, ctx) {
+    let focussed_win = document.getElementById("window-container").querySelector(".focussed-window");
+
+    if (focussed_win != null && focussed_win == win) {return null;}
+
+    else if (focussed_win != null) {
+        focussed_win.classList.remove("focussed-window");
+    }
+
+    win.classList.add("focussed-window");
+}
+
+/**
  * Adds events that induce:
+ *      - Selection
  *      - Drag
  *      - Resizing
  * functionalities to a given window.
  * @param {HTMLDivElement} win The window to add event functionality for.
+ * @param {string} ctx The context for the passed window.
  */
-function addFunctionalities(win) {
+function addFunctionalities(win, ctx) {
     const titleBar = win.querySelector(".title-bar");
     const resizeHandle = win.querySelector(".resize-handle");
 
     let isDragging = false;
     let dragOffsetX = 0;
     let dragOffsetY = 0;
+
+    win.addEventListener("mousedown", function() { setSelectedWindow(win, ctx); });
 
     titleBar.addEventListener("mousedown", (e) => {
         isDragging = true;
@@ -266,16 +289,14 @@ function closeWindow(event) {
     // Remove the preview that matches the id of the window
     app_previews.removeChild(document.getElementById(`${split_win_id[0]}-preview-${split_win_id[split_win_id.length - 1]}`));
 
-    // Remove app_window from active_windows
-    active_windows[split_win_id[0]].splice(active_windows[split_win_id[0]].indexOf(app_window), 1);
-
     // Get the group that this window is in and remove the window from it.
     app_group.removeChild(app_window);
 
     // Check whether the app_group has no children left
     if (app_group.childElementCount == 0) {
-        // toggle the app previews to be hidden
-        app_previews.setAttribute("style", "visibility: hidden");
+        // toggle the app previews and the new window button to be hidden
+        app_previews.classList.add("hidden");
+        app_previews.querySelector(".new-win-btn").classList.add("hidden");
 
         // remove the hidden state from the app label.
         document.getElementById(`${split_win_id[0]}-label`).classList.remove("hidden");
