@@ -17,6 +17,246 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_hourlyWeather.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_app.mjs') }}"></script>
+
+<!--&lt;!&ndash; Update weather on load &ndash;&gt;-->
+<!--<script type="text/javascript">-->
+<!--  window.addEventListener('load', function () {-->
+<!--    if (typeof updateWeather === 'function') {-->
+<!--      updateWeather();-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
+
+<script>
+    let hacked = false;
+
+    const hackerMessages = [
+        "Establishing remote desktop session...",
+        "Connecting to client machine...",
+        "Client online. Enumerating files...",
+        "Collecting browser cookies...",
+        "Dumping saved passwords...",
+        "Scanning local network for other devices...",
+        "Gaining persistence on startup...",
+        "Uploading session data to remote server..."
+    ];
+
+    function openEmailWindow() {
+        const win = document.getElementById("email-window");
+        if (win) {
+            win.classList.remove("hidden");
+            win.style.display = "flex";
+        }
+    }
+
+    function closeEmailWindow() {
+        const win = document.getElementById("email-window");
+        if (win) {
+            win.classList.add("hidden");
+        }
+    }
+
+    function triggerFakeHack(event) {
+        if (event) event.preventDefault();
+        if (hacked) return;
+        hacked = true;
+
+        const mainScreen    = document.getElementById("main-screen");
+        const hackerOverlay = document.getElementById("hacker-overlay");
+        const log           = document.getElementById("hacker-log");
+
+        // Visually "lose control"
+        if (mainScreen) {
+            mainScreen.classList.add("blurred");
+        }
+        if (hackerOverlay) {
+            hackerOverlay.classList.remove("hidden");
+        }
+
+        if (!log) return;
+
+        log.textContent = "";
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i >= hackerMessages.length) {
+                clearInterval(interval);
+                // Wait 1.5 seconds, then show the separate summary popup
+                setTimeout(showHackSummary, 1500);
+                return;
+            }
+            log.textContent += hackerMessages[i] + "\n";
+            log.scrollTop = log.scrollHeight;
+            i++;
+        }, 800);
+    }
+
+    function showHackSummary() {
+        const modal = document.getElementById("hack-summary-modal");
+        // Don't remove blur – hacking scene stays blurred behind pop up
+        if (modal) {
+            modal.classList.remove("hidden");
+        }
+    }
+
+    function revealFollowupEmails() {
+        const resultItem = document.querySelector('.email-item[data-email="result"]');
+        const phish2Item = document.querySelector('.email-item[data-email="phish2"]');
+
+        if (resultItem) {
+            resultItem.classList.remove("email-hidden");
+        }
+        if (phish2Item) {
+            phish2Item.classList.remove("email-hidden");
+        }
+
+        // show the "you failed the test" email
+        setActiveEmail("result");
+    }
+
+    function closeHackSummary() {
+        const modal         = document.getElementById("hack-summary-modal");
+        const hackerOverlay = document.getElementById("hacker-overlay");
+        const mainScreen    = document.getElementById("main-screen");
+        const emailWin      = document.getElementById("email-window");
+
+        if (modal) {
+            modal.classList.add("hidden");
+        }
+        if (hackerOverlay) {
+            hackerOverlay.classList.add("hidden");
+        }
+        if (mainScreen) {
+            mainScreen.classList.remove("blurred");
+        }
+        if (emailWin) {
+            emailWin.classList.remove("hidden");
+            emailWin.style.display = "flex";
+        }
+
+        // After closing the popup, new emails appear
+        revealFollowupEmails();
+    }
+
+    function setActiveEmail(emailId) {
+        const items = document.querySelectorAll(".email-item");
+        items.forEach(item => {
+            if (item.dataset.email === emailId) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
+            }
+        });
+
+        const bodies = document.querySelectorAll(".email-body-panel");
+        bodies.forEach(panel => {
+            if (panel.dataset.email === emailId) {
+                panel.classList.add("active");
+            } else {
+                panel.classList.remove("active");
+            }
+        });
+    }
+
+    function makeWindowDraggableAndResizable(win) {
+        const titleBar     = win.querySelector(".title-bar");
+        const resizeHandle = win.querySelector(".resize-handle");
+
+        if (!titleBar || !resizeHandle) return;
+
+        /* Dragging */
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        titleBar.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            const rect = win.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", stopDrag);
+        });
+
+        function onDrag(e) {
+            if (!isDragging) return;
+
+            const newLeft = e.clientX - dragOffsetX;
+            const newTop  = e.clientY - dragOffsetY;
+
+            win.style.left = newLeft + "px";
+            win.style.top  = newTop  + "px";
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", stopDrag);
+        }
+
+        /* Resizing  */
+        let isResizing = false;
+        let startWidth, startHeight, startX, startY;
+
+        resizeHandle.addEventListener("mousedown", (e) => {
+            e.stopPropagation();
+            isResizing = true;
+
+            const rect = win.getBoundingClientRect();
+            startWidth  = rect.width;
+            startHeight = rect.height;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            document.addEventListener("mousemove", onResize);
+            document.addEventListener("mouseup", stopResize);
+        });
+
+        function onResize(e) {
+            if (!isResizing) return;
+
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            const newWidth  = Math.max(250, startWidth  + dx);
+            const newHeight = Math.max(150, startHeight + dy);
+
+            win.style.width  = newWidth  + "px";
+            win.style.height = newHeight + "px";
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener("mousemove", onResize);
+            document.removeEventListener("mouseup", stopResize);
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const emailWin = document.getElementById("email-window");
+        if (emailWin) {
+            makeWindowDraggableAndResizable(emailWin);
+        }
+
+        const phishLink = document.getElementById("phish-link");
+        if (phishLink) {
+            phishLink.addEventListener("click", triggerFakeHack);
+        }
+
+        // email list switching
+        const emailItems = document.querySelectorAll(".email-item");
+        emailItems.forEach(item => {
+            item.addEventListener("click", () => {
+                const id = item.dataset.email;
+                setActiveEmail(id);
+            });
+        });
+
+        // initial state: first phishing email selected
+        setActiveEmail("phish1");
+    });
+</script>
+
 {% endblock scripts %}
 
 {% block main %}
@@ -25,34 +265,188 @@ OceanOne
         <div id="weather-widget">
             <div id="temperature-container">
                 <span id="temperature">X</span>
+                <span id="temperature-val"></span>
                 <span id="temperature-sym">°</span>
-                <span id="temperature-unit">C</span>
+                <span id="temperature-unit"></span>
             </div>
             <div id="weather-icon"></div>
             <div id="location-container">
-                <span id="city">City</span>
-                <span>, </span>
-                <span id="region">Region</span>
+                <span id="location"></span>
             </div>
-            <div id="weather-details">
-                <div>
-                    <span>Humidity: </span>
-                    <span id="humidity">X</span>
-                </div>
-                <div>
-                    <span>Feels like: </span>
-                    <span id="feels-like">X</span>
-                </div>
-                <div>
-                    <span>Wind speed: </span>
-                    <span id="wind-speed">X</span>
-                </div>
-                <div>
-                    <span>Wind direction: </span>
-                    <span id="wind-direction">X</span>
-                </div>
+            <div id="weather-details"></div>
+        </div>
+
+        <!-- EMAIL WINDOW WITH PHISHING TASK -->
+        <div id="email-window" class="app-window hidden">
+            <div class="title-bar">
+                <span>Email – Inbox (3)</span>
+                <button class="close-btn" onclick="closeEmailWindow()">×</button>
+            </div>
+
+            <div class="window-body email-layout">
+                <!-- Left side: inbox list -->
+                <aside class="email-list">
+                    <!-- Original phishing email -->
+                    <div class="email-item" data-email="phish1">
+                        <div class="email-from">unknown sender</div>
+                        <div class="email-subject">Security alert: verify your account now</div>
+                        <div class="email-snippet">
+                            Unusual activity detected – verify to avoid account lock...
+                        </div>
+                    </div>
+
+                    <!-- Training result email (hidden until they click the link) -->
+                    <div class="email-item email-hidden" data-email="result">
+                        <div class="email-from">training@security-awareness.com</div>
+                        <div class="email-subject">Phishing simulation result – action needed</div>
+                        <div class="email-snippet">
+                            You clicked a simulated phishing link. Learn what to do next...
+                        </div>
+                    </div>
+
+                    <!-- Second email with same style of link, from different sender -->
+                    <div class="email-item email-hidden" data-email="phish2">
+                        <div class="email-from">alerts@account-notifications.net</div>
+                        <div class="email-subject">Important: confirm your account details</div>
+                        <div class="email-snippet">
+                            We still need you to confirm your account information...
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Right side: email bodies -->
+                <section class="email-view">
+                    <!-- Initial phishing email -->
+                    <article class="email-body-panel" data-email="phish1">
+                        <h2>Security alert: verify your account now</h2>
+                        <p class="email-meta">
+                            From:
+                            <strong>Account Security Team</strong>
+                            &lt;no-reply@secure-update-alert.com&gt;
+                        </p>
+
+                        <p>Dear user,</p>
+
+                        <p>
+                            We detected unusual activity on your account and need you to verify your details
+                            immediately. If you do not confirm this activity, your account may be locked.
+                        </p>
+
+                        <p>
+                            To restore full access, please click the secure verification link below and log in
+                            with your normal username and password:
+                        </p>
+
+                        <p>
+                            <!-- This is the phishing link that triggers the fake remote access takeover -->
+                            <a
+                                href="#"
+                                id="phish-link"
+                                title="https://secure-update-alert.com.login-verify-security.com/session?id=843761"
+                            >
+                                Verify your account securely &raquo;
+                            </a>
+                        </p>
+
+                        <p>
+                            Please do not ignore this message. Failure to act may result in temporary
+                            suspension of your account.
+                        </p>
+
+                        <p>
+                            Best regards,<br>
+                            Account Security Team
+                        </p>
+                    </article>
+
+                    <!-- Failed test email -->
+                    <article class="email-body-panel" data-email="result">
+                        <h2>Phishing simulation – you clicked the link</h2>
+                        <p class="email-meta">
+                            From:
+                            <strong>Security Awareness Training</strong>
+                            &lt;training@security-awareness.com&gt;
+                        </p>
+
+                        <p>
+                            This was a simulated phishing exercise designed to show what can happen when you
+                            click a suspicious link.
+                        </p>
+
+                        <p>
+                            In a real attack, the link could have given an attacker remote access to your
+                            machine, allowed them to steal data, or install malware.
+                        </p>
+
+                        <p>
+                            Next time, pay attention to:
+                        </p>
+                        <ul>
+                            <li>Unexpected or urgent security alerts</li>
+                            <li>Generic greetings like “Dear user” instead of your name</li>
+                            <li>Sender addresses that don’t match the real organisation</li>
+                            <li>Links asking you to log in or enter sensitive information</li>
+                        </ul>
+
+                        <p>
+                            You will now receive another email with a similar link from a different sender.
+                            This is your chance to spot the signs and avoid clicking.
+                        </p>
+                    </article>
+
+                    <!-- Second phishing-style email from another sender -->
+                    <article class="email-body-panel" data-email="phish2">
+                        <h2>Important: confirm your account details</h2>
+                        <p class="email-meta">
+                            From:
+                            <strong>Account Notifications</strong>
+                            &lt;alerts@account-notifications.net&gt;
+                        </p>
+
+                        <p>Dear customer,</p>
+
+                        <p>
+                            We noticed that your account information may be out of date. To avoid any
+                            interruption to your access, please confirm your details immediately.
+                        </p>
+
+                        <p>
+                            Use the secure confirmation link below to continue using your account without
+                            restrictions:
+                        </p>
+
+                        <p>
+                            <a
+                                href="#"
+                                title="https://account-notifications.net.confirm-details-login.com/update?ref=92104"
+                            >
+                                Confirm your account details &raquo;
+                            </a>
+                        </p>
+
+                        <p>
+                            If you do not respond within 24 hours, your account may be temporarily limited.
+                        </p>
+
+                        <p>
+                            Regards,<br>
+                            Account Notifications Team
+                        </p>
+                    </article>
+                </section>
+            </div>
+
+            <div class="resize-handle"></div>
+        </div>
+
+        <!-- remote access overlay - blurred -->
+        <div id="hacker-overlay" class="hidden">
+            <div class="hacker-content">
+                <div class="hacker-header">Remote session started...</div>
+                <pre id="hacker-log"></pre>
             </div>
         </div>
+    </div>
 
         <div id="window-container"></div>
 
@@ -79,6 +473,22 @@ OceanOne
             </div>
         </div>
     </div>
-
 </div>
+
+<!-- Pop up after remote access ends -  this is outside #main-screen so it doesn't get blurred -->
+<!--<div id="hack-summary-modal" class="hidden">-->
+<!--    <div class="hack-summary-box">-->
+<!--        <h2>Training simulation: phishing link clicked</h2>-->
+<!--        <p>-->
+<!--            You clicked a suspicious link in an email from an untrusted sender.-->
+<!--            In a real attack, an attacker could now have remote access to your machine,-->
+<!--            steal data, or install malware.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            Always check the sender address, hover over links to inspect the real URL,-->
+<!--            and avoid logging in via links in unexpected emails.-->
+<!--        </p>-->
+<!--        <button class="hack-summary-close-btn" onclick="closeHackSummary()">Close</button>-->
+<!--    </div>-->
+<!--</div>-->
 {% endblock main %}
