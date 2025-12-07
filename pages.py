@@ -28,46 +28,67 @@ def get_preview_template() -> Response:
 
 @BP.route("/get-weather", methods=["POST"])
 async def get_weather() -> Response:
-    """Gets weather information based on the users current location."""
+    """Gets weather information based on the user's current location."""
 
-    req_data = request.get_json()
+    req_data = request.get_json() or {}
 
-    # -- Get location based on user IP
-    # - Get IP address using ipify API
-    # https://www.ipify.org/
-    ip = requests.get("https://api64.ipify.org?format=json").json()["ip"]
-    print(ip)
+    # Default to Celsius if the frontend doesn't send anything
+    temp_kind = (req_data.get("temp_kind") or "C").upper()
 
-    # - Get location using apapi API
-    # https://ipapi.co/api/
-    location_info = requests.get(f"https://ipapi.co/{ip}/json").json()
-    print(location_info)
+        # --- NEW: Get location using ipinfo.io (no rate limits) ---
+    try:
+        location_info = requests.get("https://ipinfo.io/json", timeout=5).json()
+        print("Location info:", location_info)
+    except Exception as e:
+        print("Error getting location:", e)
+        return jsonify({
+            "city": "?",
+            "region": "?",
+            "temperature": "?",
+            "temp_kind": temp_kind,
+            "kind": "?"
+        })
 
-    if location_info.get("error"):
-        return jsonify({"city": '?', "region": '?', "temperature": '?', "temperature-unit": '?', "kind": '?', "humidity": '?',
-                        "feels-like": '?', "wind-speed": '?', "wind-direction": '?'})
+    city = location_info.get("city")
+    region = location_info.get("region")
+    country = location_info.get("country")
 
-    # -- Get weather information
-    # - Adjust weather client unit type based on preference in js_hourlyWeather.mjs
+    if not city:
+        return jsonify({
+            "city": "?",
+            "region": "?",
+            "temperature": "?",
+            "temp_kind": temp_kind,
+            "kind": "?"
+        })
+
+
+    # 3) Choose unit system for python_weather
     unit = pw.METRIC
-    if req_data["temperature-unit"].upper() == 'F':
+    if temp_kind == "F":
         unit = pw.IMPERIAL
 
-    # - Get weather info based on city.
-    async with pw.Client(unit=unit) as client:  # Defaults to metric system like degrees celsius
-        # - Fetch forecast for nearest city
-        weather = await client.get(location_info["city"])
+    # 4) Fetch weather for the detected city
+    try:
+        async with pw.Client(unit=unit) as client:
+            weather = await client.get(location_info["city"])
+    except Exception as e:
+        print("Weather API error:", e)
+        return jsonify({
+            "city": city,
+            "region": country,
+            "temperature": "?",
+            "temp_kind": temp_kind,
+            "kind": "?"
+        })
 
     print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
 
+    # Use city + country_name so it matches "City, Country"
     return jsonify({
         "city": location_info["city"],
-        "region": location_info["region"],
+        "region": country,
         "temperature": weather.temperature,
-        "temperature-unit": req_data["temperature-unit"],
-        "kind": weather.kind.name,
-        "humidity": weather.humidity,
-        "feels-like": weather.feels_like,
-        "wind-speed": weather.wind_speed,
-        "wind-direction": weather.wind_direction.name
+        "temp_kind": temp_kind,
+        "kind": weather.kind.name
     })
