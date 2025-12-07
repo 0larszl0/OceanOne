@@ -1,10 +1,12 @@
-/* --- Add events for apps --- */
+/* - Globals - */
+
 
 /**
- When the page loads, find all the apps using the class name 'app'. Then add each app's proper event.
+ When the page loads, apply all necessary event listeners and make any necessary function calls without manual intervention.
  */
 window.onload = function() {
-    console.log("Complete");
+
+    /* -------- Add (taskbar) app events -------- */
     let apps = document.getElementsByClassName("app");
 
     for (var i = 0; i < apps.length; i++) {
@@ -14,4 +16,6 @@ window.onload = function() {
         // When the mouse leaves the app previews
         apps[i].addEventListener("mouseout", function(event) { this.querySelector(".app-previews").classList.add("hidden"); });
     }
+
+    /* -------- Update the forecasted temperature -------- */
 }

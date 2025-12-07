@@ -28,8 +28,6 @@
 
     border-top: 1px solid rgba(255,255,255,0.06);
     box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
-    justify-content: center;
-    align-items: center;
 }
 
 #taskbar-apps {
@@ -39,6 +37,8 @@
 
     width: 100%;
     justify-content: center;
+
+    gap: 5px;
 }
 
 .app {
