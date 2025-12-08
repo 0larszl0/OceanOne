@@ -70,15 +70,11 @@
     border: 1px solid red;
 }
 
-.new-win-btn {
-    width: auto;
-}
-
-.minimise-btn, .new-win-btn {
+.minimise-btn {
     background: transparent;
 }
 
-.minimise-btn:hover, .new-win-btn:hover {
+.minimise-btn:hover {
     border: 1px solid rgb(5, 180, 239);
 }
 

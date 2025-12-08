@@ -89,7 +89,7 @@ function add_preview(response_of_temp, ctx, win) {
         current_child = preview_actions.children[i];
 
         switch (current_child.innerText) {
-            case 'x':
+            case '×':
                 current_child.addEventListener('click', (e) => closePreview(e));
                 break;
         }
@@ -113,6 +113,8 @@ function add_preview(response_of_temp, ctx, win) {
 
         pointer-events: none;
         overflow: clip;
+
+        box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.3);
     `;
 
     let app_previews = document.getElementById(`${ctx}-app`).querySelector(".app-previews");
