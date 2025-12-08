@@ -1,11 +1,16 @@
 /* -- Globals -- */
-var lastHour = '';
+var currentHour = new Date().getUTCHours();
 
 
+/**
+ * When all the html, stylesheets and js has been loaded, update hourly once immediately, and begin hiding the loader once everything is finished.
+ */
 document.addEventListener("DOMContentLoaded", async function() {
-    console.log("STartED");
-    await hourlyUpdate();
-    console.log("END");
+    await hourlyUpdate(currentHour);
+
+    let pageLoader = document.getElementById("page-loader");
+    pageLoader.classList.add("fade-out");
+    pageLoader.classList.add("restrict-pointer");
 })
 
 
@@ -13,7 +18,6 @@ document.addEventListener("DOMContentLoaded", async function() {
  When the page loads, apply all necessary event listeners and make any necessary function calls without manual intervention.
  */
 window.onload = async function() {
-
     /* -------- Add (taskbar) app events -------- */
     let apps = document.getElementsByClassName("app");
 

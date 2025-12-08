@@ -1,15 +1,14 @@
 /* ------ All timers within this project ------ */
 
-/* -- Globals -- */
-const date = new Date();
-
 /**
  * A timer that updates every hour, by checking every second.
  */
 setInterval(function() {
-    if (lastHour != date.getUTCHours()) {
-        hourlyUpdate();
-        console.log("HHAHHAH");
+    let newHour = new Date().getUTCHours();
+
+    if (currentHour != newHour) {
+        currentHour = newHour;
+        hourlyUpdate(currentHour);
     }
 }, 1000);
 
@@ -17,12 +16,10 @@ setInterval(function() {
 /**
  * An asynchronous function that updates select things every hour.
  */
-async function hourlyUpdate() {
-    // update the forecasted weather on the scree
-    lastHour = date.getUTCHours();
-    await updateWeather();
-
+async function hourlyUpdate(currentHour) {
     // update the background image
-    document.getElementById("main-screen").setAttribute("style", `background-image: url(static/${lastHour}.png);`)
+    document.getElementById("main-screen").setAttribute("style", `background-image: url(static/${currentHour}.png);`)
 
+    // update the forecasted weather on the scree
+    await updateWeather();
 }

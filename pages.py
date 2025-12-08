@@ -57,7 +57,8 @@ async def get_weather() -> Response:
         return jsonify(response_template)
 
     except ConnectionResetError as cre:
-        ...
+        print(f"The connection was reset by the API service. For more info look at:\n{cre}")
+        return jsonify(response_template)
 
     # print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
 
