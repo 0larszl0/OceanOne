@@ -39,7 +39,6 @@
 }
 
 .window-body {
-    padding: 12px;
     height: 100%;
 }
 
@@ -52,7 +51,7 @@
     display: flex;
     justify-content: flex-end;
 
-    gap: 2%;
+    gap: 0.9%;
 }
 
 .window-actions button, .new-win-btn {
@@ -60,7 +59,7 @@
     border-radius: 3px;
     color: white;
     border: 1px solid transparent;
-    width: 7%;  /* This is so that each button has the same width as each other */
+    width: 25px;  /* This is so that each button has the same width as each other */
 }
 
 .close-btn {
