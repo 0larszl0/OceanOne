@@ -21,7 +21,7 @@
 #taskbar {
     display: flex;
     position: relative;
-    background-color: rgba(15, 23, 42, 0.9);
+    background-color: rgba(4, 8, 19, 0.9);
 
     height: 5%;
 

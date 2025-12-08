@@ -110,6 +110,9 @@ function add_preview(response_of_temp, ctx, win) {
         transform: scale(0.85, 0.9);
         height: 100%;
         background-color: ${win_style.backgroundColor};
+
+        pointer-events: none;
+        overflow: clip;
     `;
 
     let app_previews = document.getElementById(`${ctx}-app`).querySelector(".app-previews");
@@ -121,6 +124,7 @@ function add_preview(response_of_temp, ctx, win) {
     preview_body.addEventListener("click", async function() {
         setSelectedWindow(win, ctx);
         app_previews.classList.add("hidden");
+        win.classList.remove("hidden");  // let the preview always be on the screen.
     });
 
     // -- Adjust headers of the preview container --
@@ -156,6 +160,7 @@ async function toggleWindow(ctx) {
         window_container.appendChild(window_group);  // append the new group into the window container
         await createWindow(ctx, window_group);  // wait till the new window has been created before continuing.
 
+        // Add an event listener to the create new window button within the created group.
         document.getElementById(`${ctx}-app`).querySelector(".new-win-btn").addEventListener("click", async function(_) {createWindow(ctx, window_group);});
 
         return null;
@@ -163,7 +168,10 @@ async function toggleWindow(ctx) {
 
     if (window_group.childElementCount >= 1) {  // when there's more than one child in the group of windows
         // toggle the window that's at the front of the active windows list for that context.
-        document.getElementById("window-container").querySelector(".focussed-window").classList.toggle("hidden");
+        window_container.querySelector(".focussed-window").classList.toggle("hidden");
+
+        // hide the preview options
+        document.getElementById(`${ctx}-app`).querySelector(".app-previews").classList.add("hidden");
 
         return null;
     }
