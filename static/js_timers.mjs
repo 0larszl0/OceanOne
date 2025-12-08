@@ -9,6 +9,7 @@ const date = new Date();
 setInterval(function() {
     if (lastHour != date.getUTCHours()) {
         hourlyUpdate();
+        console.log("HHAHHAH");
     }
 }, 1000);
 

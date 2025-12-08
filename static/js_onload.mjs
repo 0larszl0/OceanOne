@@ -2,6 +2,13 @@
 var lastHour = '';
 
 
+document.addEventListener("DOMContentLoaded", async function() {
+    console.log("STartED");
+    await hourlyUpdate();
+    console.log("END");
+})
+
+
 /**
  When the page loads, apply all necessary event listeners and make any necessary function calls without manual intervention.
  */
@@ -17,6 +24,4 @@ window.onload = async function() {
         // When the mouse leaves the app previews
         apps[i].addEventListener("mouseout", function(event) { this.querySelector(".app-previews").classList.add("hidden"); });
     }
-
-    await hourlyUpdate();
 }

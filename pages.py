@@ -56,6 +56,9 @@ async def get_weather() -> Response:
         print("Weather API error:", e)
         return jsonify(response_template)
 
+    except ConnectionResetError as cre:
+        ...
+
     # print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
 
     response_template["location"] = f"{location_info['city']}, {location_info['country']}"
