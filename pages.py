@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, Response
 import python_weather as pw
 import requests
+from python_weather import RequestError
 
 BP = Blueprint("pages", __name__)
 
@@ -30,65 +31,35 @@ def get_preview_template() -> Response:
 async def get_weather() -> Response:
     """Gets weather information based on the user's current location."""
 
-    req_data = request.get_json() or {}
+    req_data = request.get_json()
+    response_template = {"location": "", "temperature-val": "", "temperature-unit": ""}
 
-    # Default to Celsius if the frontend doesn't send anything
-    temp_kind = (req_data.get("temp_kind") or "C").upper()
-
-        # --- NEW: Get location using ipinfo.io (no rate limits) ---
+    # -- Get location using ipinfo.io (no rate limits)
     try:
         location_info = requests.get("https://ipinfo.io/json", timeout=5).json()
-        print("Location info:", location_info)
     except Exception as e:
         print("Error getting location:", e)
-        return jsonify({
-            "city": "?",
-            "region": "?",
-            "temperature": "?",
-            "temp_kind": temp_kind,
-            "kind": "?"
-        })
+        return jsonify(response_template)
 
-    city = location_info.get("city")
-    region = location_info.get("region")
-    country = location_info.get("country")
+    # print(location_info)
 
-    if not city:
-        return jsonify({
-            "city": "?",
-            "region": "?",
-            "temperature": "?",
-            "temp_kind": temp_kind,
-            "kind": "?"
-        })
-
-
-    # 3) Choose unit system for python_weather
+    # -- Choose unit system for python_weather
     unit = pw.METRIC
-    if temp_kind == "F":
+    if req_data["temp_kind"].upper() == "F":
         unit = pw.IMPERIAL
 
-    # 4) Fetch weather for the detected city
+    # -- Fetch weather for the detected city
     try:
         async with pw.Client(unit=unit) as client:
             weather = await client.get(location_info["city"])
-    except Exception as e:
+    except RequestError as e:
         print("Weather API error:", e)
-        return jsonify({
-            "city": city,
-            "region": country,
-            "temperature": "?",
-            "temp_kind": temp_kind,
-            "kind": "?"
-        })
+        return jsonify(response_template)
 
-    print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
+    # print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
 
-    # Use city + country_name so it matches "City, Country"
-    return jsonify({
-        "city": location_info["city"],
-        "region": country,
-        "temperature": weather.temperature,
-        "temp_kind": temp_kind,
-        "kind": weather.kind.name
-    })
+    response_template["location"] = f"{location_info['city']}, {location_info['country']}"
+    response_template["temperature-val"] = str(weather.temperature)
+    response_template["temperature-unit"] = req_data["temp_kind"]
+
+    return jsonify(response_template)

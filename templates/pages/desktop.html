@@ -18,15 +18,6 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_onload.mjs') }}"></script>
 
-<!--&lt;!&ndash; Update weather on load &ndash;&gt;-->
-<!--<script type="text/javascript">-->
-<!--  window.addEventListener('load', function () {-->
-<!--    if (typeof updateWeather === 'function') {-->
-<!--      updateWeather();-->
-<!--    }-->
-<!--  });-->
-<!--</script>-->
-
 <script>
     let hacked = false;
 
@@ -174,16 +165,14 @@ OceanOne
     <div id="main-screen">
         <div id="weather-widget">
             <div id="temperature-container">
-                <span id="temperature">X</span>
                 <span id="temperature-val"></span>
-                <span id="temperature-sym">°</span>
+                <span id="temperature-sym"></span>
                 <span id="temperature-unit"></span>
             </div>
             <div id="weather-icon"></div>
             <div id="location-container">
                 <span id="location"></span>
             </div>
-            <div id="weather-details"></div>
         </div>
 
         <!-- EMAIL WINDOW WITH PHISHING TASK -->
@@ -363,7 +352,8 @@ OceanOne
     <div id="taskbar">
         <div id="taskbar-apps">
             <div class="app">
-                <div class="app-preview">
+                <div class="app-previews hidden">
+                    <span id="weather-label" class="app-label">Update weather</span>
                 </div>
                 <div class="app-icon">
                     <button onclick="updateWeather();">Click ME!</button>

@@ -1,38 +1,42 @@
-// setInterval(async () => {
-//     await bodiedFetch();
-// }, 1000 * 60 * 60);
+/* -- Globals -- */
+const date = new Date();
+var lastHour = '';
 
 
+/**
+ * Updates the weather every hour, by checking every second.
+ */
+setInterval(() => {
+    if (lastHour != date.getUTCHours()) {
+        updateWeather();
+        lastHour = date.getUTCHours();
+    }
+}, 1000);
+
+
+/**
+ * The function that initiates a conversation with the backend regarding the weather.
+ */
 async function updateWeather() {
-    const widget = document.getElementById("weather-widget");
-    if (widget) widget.classList.add("loading");
-
     await bodiedFetch(
         "/get-weather",
         { temp_kind: "C" },
-        (weather_details) => {
-            x(weather_details);
-            if (widget) widget.classList.remove("loading");
-        }
+        displayWeather
     );
 }
 
-function x(weather_details){
-    let temp_span = document.getElementById("temperature-val");
-    let temp_sym_span = document.getElementById("temperature-unit");
-    let location_span = document.getElementById("location");
 
-    // -- Set each weather detail with the relevant information
-    //let ids = ["city", "region", "temperature", "temperature-unit", "humidity", "feels-like", "wind-speed", "wind-direction"];
-//     for (var i = 0; i < ids.length; i++) {
-//         var span = document.getElementById(ids[i]);
-//         span.innerText = weather_details[ids[i]];
-//     }
-    temp_span.innerText = weather_details["temperature"];
-    temp_sym_span.innerText = weather_details["temp_kind"];
-    location_span.innerText = `${weather_details['city']}, ${weather_details['region']}`;
+/**
+ * Changes some known span values to allow new weather details to be seen.
+ * @param {JSON} weather_details The weather details responded from the backend.
+ */
+function displayWeather(weather_details){
+    console.log(date.getUTCHours()) ;
+    for (var span_name in weather_details) {
+        document.getElementById(span_name).innerText = weather_details[span_name];
+    }
 
-    console.log(weather_details);
-
+    let temp_sym = document.getElementById("temperature-sym");
+    if (!temp_sym.innerText) { temp_sym.innerText += '°'; }
 }
 
