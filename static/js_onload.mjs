@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     let pageLoader = document.getElementById("page-loader");
     pageLoader.classList.add("fade-out");
     pageLoader.classList.add("restrict-pointer");
+
+    active_emails.push("phishing");  // doesn't use updateMailList because no email windows nor group exist onload.
 })
 
 

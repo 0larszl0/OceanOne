@@ -16,7 +16,6 @@
     left: 120px;
     width: 400px;
     height: 260px;
-    background: #ffffff;
     border: 2px solid #222;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -40,6 +39,9 @@
 
 .window-body {
     height: 100%;
+
+    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .window-title {

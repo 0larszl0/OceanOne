@@ -72,11 +72,19 @@ async def get_weather() -> Response:
 
 @BP.route("/get-email", methods=["POST"])
 def get_email() -> Response:
+    """Get the relevant details and structure for an email."""
     req_data = request.get_json()
     response = {}
 
     match req_data["topic"]:
         case "phishing":
-            ...
+            response = {
+                "sender": "Account Security Team",
+                "sender-email": "no-reply@secure-update-alert.com",
+                "subject": "Security Alert: Account Access at 04:32",
+                "message": render_template("emails/content/phishing_intro.html"),
+                "body-structure": render_template("emails/email_body.html"),
+                "preview-structure": render_template("emails/email_preview.html")
+            }
 
     return jsonify(response)

@@ -1,0 +1,58 @@
+.email-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    height: 100%;
+    padding: 0;
+}
+
+/* Inbox list */
+.email-list {
+    border-right: 1px solid #1f2937;
+}
+
+.email-item {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid #1f2937;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #e5e7eb;
+}
+
+.email-item.selected,
+.email-item:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.email-from { font-weight: 600; }
+.email-subject { font-weight: 500; }
+.email-snippet {
+    color: #9ca3af;
+    font-size: 0.75rem;
+}
+
+/* Reading panel */
+.email-view {
+    padding: 0.9rem 1rem;
+    color: #e5e7eb;
+}
+
+.email-header h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.email-meta {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-bottom: 0.8rem;
+}
+
+.email-body-panel {
+    display: none;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.email-body-panel.active {
+    display: block;
+}

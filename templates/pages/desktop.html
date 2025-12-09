@@ -10,6 +10,7 @@ OceanOne
 <link rel="stylesheet" href="{{ url_for('static', filename='css_windows.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_weatherWidget.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css_appPreview.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_emails.css') }}">
 {% endblock stylesheets %}
 
 {% block scripts %}
@@ -18,6 +19,8 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindow.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_onload.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_timers.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_sendMail.mjs') }}"></script>
+<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindowBody.mjs') }}"></script>
 
 <script>
     let hacked = false;

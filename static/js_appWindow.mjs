@@ -165,6 +165,7 @@ async function toggleWindow(ctx) {
         // Add an event listener to the create new window button within the created group.
         document.getElementById(`${ctx}-app`).querySelector(".new-win-btn").addEventListener("click", async function(_) {createWindow(ctx, window_group);});
 
+        initWindowBody(ctx, window_group);
         return null;
     }
 
@@ -180,6 +181,9 @@ async function toggleWindow(ctx) {
 
     // When a group exists but it's empty
     await createWindow(ctx, window_group);
+
+    // Run a function that updates the contents of the window body
+    initWindowBody(ctx, window_group);
 }
 
 
