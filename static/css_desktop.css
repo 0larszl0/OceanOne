@@ -42,7 +42,8 @@
 
 .app {
     position: relative;
-    width: 6%;
+    width: 65px;
+    height: 50px;
 
     display: flex;
     justify-content: center;

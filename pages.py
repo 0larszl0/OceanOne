@@ -5,6 +5,7 @@ from python_weather import RequestError
 
 BP = Blueprint("pages", __name__)
 
+
 @BP.route("/")
 def home() -> str:
     """Returns the template of the home page"""
@@ -67,3 +68,15 @@ async def get_weather() -> Response:
     response_template["temperature-unit"] = req_data["temp_kind"]
 
     return jsonify(response_template)
+
+
+@BP.route("/get-email", methods=["POST"])
+def get_email() -> Response:
+    req_data = request.get_json()
+    response = {}
+
+    match req_data["topic"]:
+        case "phishing":
+            ...
+
+    return jsonify(response)
