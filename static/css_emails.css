@@ -1,13 +1,11 @@
 .email-layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
     height: 100%;
     padding: 0;
 }
 
-/* Inbox list */
-.email-list {
-    border-right: 1px solid #1f2937;
+.email-preview {
+    display: flex;
+    gap: 15px;
 }
 
 .email-item {
@@ -23,7 +21,29 @@
     background: rgba(59, 130, 246, 0.2);
 }
 
-.email-from { font-weight: 600; }
+.email-from, .email-subject, .email-snippet {
+    overflow: hidden;
+    text-wrap: nowrap;
+
+    /* Clips the text such that the linear gradient applies to it, instead of the background */
+    background: linear-gradient(to right, white, transparent);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.email-from {
+    width: 33%;
+}
+
+.email-subject {
+    width: 33%;
+}
+
+.email-snippet {
+    width: 33%;
+}
+
+
 .email-subject { font-weight: 500; }
 .email-snippet {
     color: #9ca3af;
