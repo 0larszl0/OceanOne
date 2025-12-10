@@ -93,7 +93,7 @@ function add_preview(response_of_temp, ctx, win) {
 
         switch (current_child.innerText) {
             case '×':
-                current_child.addEventListener('click', (e) => closePreview(e));
+                current_child.addEventListener('click', (e) => {closePreview(e);});
                 break;
         }
     }

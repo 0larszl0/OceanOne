@@ -35,7 +35,7 @@ async function addMail(win, topic) {
     );
 
     email_preview.classList = "email-preview unread";
-    email_body.classList = "email-body";
+    email_body.classList = "email-body hidden";
 
     // - Add the email preview to the top of the list of emails -
     let win_email_list = win.querySelector(".email-list");
@@ -44,6 +44,10 @@ async function addMail(win, topic) {
     // - Add the email body to the top of the list of email bodies -
     let win_body_list = win.querySelector(".email-view");
     win_body_list.insertBefore(email_body, win_body_list.childNodes[0]);
+
+    // Add eventlisteners to both preview and button within the body, that toggles between email body and email list.
+    email_preview.addEventListener("click", function() {toggleEmailView(email_preview, email_body); email_preview.classList.remove("unread");} );
+    email_body.querySelector(".view-email-list").addEventListener("click", function() {toggleEmailView(email_preview, email_body)});
 
 
     // check whether any group or whether the selected window is selected. If they're not, add a notification icon on the email app.
@@ -62,7 +66,8 @@ function addDetails(details, email_preview, email_body) {
     email_body.innerHTML = details["body-structure"];
 
     // Add the details into the related divs within the body.
-    email_body.querySelector(".senders-email").innerText = details["sender-email"];
+    email_body.querySelector(".sender").innerText = details["sender"];
+    email_body.querySelector(".senders-email").innerText = `<${details["sender-email"]}>`;
     email_body.querySelector(".email-title").innerText = details["subject"];
     email_body.querySelector(".email-content").innerHTML = details["message"];
 
@@ -74,3 +79,20 @@ function addDetails(details, email_preview, email_body) {
     email_preview.querySelector(".email-subject").innerText = details["subject"];
     email_preview.querySelector(".email-message").innerText = ` - ${details["message"].replaceAll("<p>", '').replaceAll("</p>", '').replaceAll('\n', '')}`;
 }
+
+
+/**
+ * Show the visibility and access available between the email body and the email list.
+ * @param {HTMLDivElement} email_preview The email that was clicked.
+ * @param {HTMLDivElement} email_body The div containing the contents of the email.
+ */
+function toggleEmailView(email_preview, email_body) {
+    // Toggle the visibility and restrictions for the email list
+    email_preview.parentNode.classList.toggle("hidden");
+    email_preview.parentNode.classList.toggle("restrict-pointer");
+
+    // Toggle the visibility and restrictions for the email body.
+    email_body.classList.toggle("hidden");
+    email_body.parentNode.classList.toggle("restrict-pointer");
+}
+
