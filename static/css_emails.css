@@ -9,6 +9,7 @@
     padding: 8px;
 
     border: 1px groove transparent;
+    border-bottom: 1px groove rgba(0, 0, 0, 0.2)
 
     font-size: 15px;
 }
