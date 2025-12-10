@@ -68,5 +68,5 @@ function addDetails(details, email_preview, email_body) {
     // Add the details into the related divs within the preview.
     email_preview.querySelector(".email-from").innerText = details["sender"];
     email_preview.querySelector(".email-subject").innerText = details["subject"];
-    email_preview.querySelector(".email-snippet").innerText = details["message"].replaceAll("<p>", '').replaceAll("</p>", '').replaceAll('\n', '');
+    email_preview.querySelector(".email-message").innerText = ` - ${details["message"].replaceAll("<p>", '').replaceAll("</p>", '').replaceAll('\n', '')}`;
 }

@@ -6,27 +6,44 @@
 .email-preview {
     display: flex;
     gap: 15px;
+
+    border: 1px groove transparent;
+
+    font-size: 15px;
 }
 
-.email-item {
-    padding: 0.6rem 0.7rem;
-    border-bottom: 1px solid #1f2937;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #e5e7eb;
+.email-preview:hover {
+    border: 1px groove black;
+    box-shadow: 0px 0px 3px 0.1px black;
 }
 
-.email-item.selected,
-.email-item:hover {
-    background: rgba(59, 130, 246, 0.2);
+.unread {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+
+    font-weight: bold;
 }
 
-.email-from, .email-subject, .email-snippet {
+.email-from, .email-snippet {
     overflow: hidden;
     text-wrap: nowrap;
+}
 
+.email-snippet {
     /* Clips the text such that the linear gradient applies to it, instead of the background */
-    background: linear-gradient(to right, white, transparent);
+    background: linear-gradient(to right, #bdbdbd 90%, transparent);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.email-from {
+    background: linear-gradient(to right, white 90%, transparent);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.email-subject {
+    background: rgba(255, 255, 255, 0.8);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
@@ -35,26 +52,15 @@
     width: 33%;
 }
 
-.email-subject {
-    width: 33%;
-}
-
 .email-snippet {
-    width: 33%;
+    width: 100%;
+}
+
+.email-message {
+    font-weight: normal !important;
 }
 
 
-.email-subject { font-weight: 500; }
-.email-snippet {
-    color: #9ca3af;
-    font-size: 0.75rem;
-}
-
-/* Reading panel */
-.email-view {
-    padding: 0.9rem 1rem;
-    color: #e5e7eb;
-}
 
 .email-header h2 {
     font-size: 1.1rem;
