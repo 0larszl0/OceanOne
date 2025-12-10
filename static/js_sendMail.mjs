@@ -35,11 +35,15 @@ async function addMail(win, topic) {
     );
 
     email_preview.classList = "email-preview unread";
-    email_body.classList = "email-body unread";
+    email_body.classList = "email-body";
 
     // - Add the email preview to the top of the list of emails -
     let win_email_list = win.querySelector(".email-list");
     win_email_list.insertBefore(email_preview, win_email_list.childNodes[0]);
+
+    // - Add the email body to the top of the list of email bodies -
+    let win_body_list = win.querySelector(".email-view");
+    win_body_list.insertBefore(email_body, win_body_list.childNodes[0]);
 
 
     // check whether any group or whether the selected window is selected. If they're not, add a notification icon on the email app.

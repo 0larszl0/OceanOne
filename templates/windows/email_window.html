@@ -12,7 +12,7 @@
 
 {% block window_body %}
 <div class="email-layout">
-    <aside class="email-list">
+    <div class="email-list">
 <!--                    &lt;!&ndash; Original phishing email &ndash;&gt;-->
 <!--                    <div class="email-item" data-email="phish1">-->
 <!--                        <div class="email-from">unknown sender</div>-->
@@ -39,126 +39,8 @@
 <!--                            We still need you to confirm your account information...-->
 <!--                        </div>-->
 <!--                    </div>-->
-    </aside>
+    </div>
 
-    <section class="email-view">
-<!--                    &lt;!&ndash; Initial phishing email &ndash;&gt;-->
-<!--                    <article class="email-body-panel" data-email="phish1">-->
-<!--                        <h2>Security alert: verify your account now</h2>-->
-<!--                        <p class="email-meta">-->
-<!--                            From:-->
-<!--                            <strong>Account Security Team</strong>-->
-<!--                            &lt;no-reply@secure-update-alert.com&gt;-->
-<!--                        </p>-->
-
-<!--                        <p>Dear user,</p>-->
-
-<!--                        <p>-->
-<!--                            We detected unusual activity on your account and need you to verify your details-->
-<!--                            immediately. If you do not confirm this activity, your account may be locked.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            To restore full access, please click the secure verification link below and log in-->
-<!--                            with your normal username and password:-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            &lt;!&ndash; This is the phishing link that triggers the fake remote access takeover &ndash;&gt;-->
-<!--                            <a-->
-<!--                                href="#"-->
-<!--                                id="phish-link"-->
-<!--                                title="https://secure-update-alert.com.login-verify-security.com/session?id=843761"-->
-<!--                            >-->
-<!--                                Verify your account securely &raquo;-->
-<!--                            </a>-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            Please do not ignore this message. Failure to act may result in temporary-->
-<!--                            suspension of your account.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            Best regards,<br>-->
-<!--                            Account Security Team-->
-<!--                        </p>-->
-<!--                    </article>-->
-
-<!--                    &lt;!&ndash; Failed test email &ndash;&gt;-->
-<!--                    <article class="email-body-panel" data-email="result">-->
-<!--                        <h2>Phishing simulation – you clicked the link</h2>-->
-<!--                        <p class="email-meta">-->
-<!--                            From:-->
-<!--                            <strong>Security Awareness Training</strong>-->
-<!--                            &lt;training@security-awareness.com&gt;-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            This was a simulated phishing exercise designed to show what can happen when you-->
-<!--                            click a suspicious link.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            In a real attack, the link could have given an attacker remote access to your-->
-<!--                            machine, allowed them to steal data, or install malware.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            Next time, pay attention to:-->
-<!--                        </p>-->
-<!--                        <ul>-->
-<!--                            <li>Unexpected or urgent security alerts</li>-->
-<!--                            <li>Generic greetings like “Dear user” instead of your name</li>-->
-<!--                            <li>Sender addresses that don’t match the real organisation</li>-->
-<!--                            <li>Links asking you to log in or enter sensitive information</li>-->
-<!--                        </ul>-->
-
-<!--                        <p>-->
-<!--                            You will now receive another email with a similar link from a different sender.-->
-<!--                            This is your chance to spot the signs and avoid clicking.-->
-<!--                        </p>-->
-<!--                    </article>-->
-
-<!--                    &lt;!&ndash; Second phishing-style email from another sender &ndash;&gt;-->
-<!--                    <article class="email-body-panel" data-email="phish2">-->
-<!--                        <h2>Important: confirm your account details</h2>-->
-<!--                        <p class="email-meta">-->
-<!--                            From:-->
-<!--                            <strong>Account Notifications</strong>-->
-<!--                            &lt;alerts@account-notifications.net&gt;-->
-<!--                        </p>-->
-
-<!--                        <p>Dear customer,</p>-->
-
-<!--                        <p>-->
-<!--                            We noticed that your account information may be out of date. To avoid any-->
-<!--                            interruption to your access, please confirm your details immediately.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            Use the secure confirmation link below to continue using your account without-->
-<!--                            restrictions:-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            <a-->
-<!--                                href="#"-->
-<!--                                title="https://account-notifications.net.confirm-details-login.com/update?ref=92104"-->
-<!--                            >-->
-<!--                                Confirm your account details &raquo;-->
-<!--                            </a>-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            If you do not respond within 24 hours, your account may be temporarily limited.-->
-<!--                        </p>-->
-
-<!--                        <p>-->
-<!--                            Regards,<br>-->
-<!--                            Account Notifications Team-->
-<!--                        </p>-->
-<!--                    </article>-->
-    </section>
+    <div class="email-view"></div>
 </div>
 {% endblock window_body %}
