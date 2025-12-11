@@ -216,18 +216,29 @@ function setSelectedWindow(win, ctx) {
  * @param {string} ctx The context for the passed window.
  */
 function addFunctionalities(win, ctx) {
-    const titleBar = win.querySelector(".title-bar");
-    const resizeHandle = win.querySelector(".resize-handle");
+    // Set the minimum dimensions for a window (when resizing)
+    const minWidth = 250;
+    const minHeight = 150;
 
-    let isDragging = false;
+    // Get the titlebar of the window.
+    let titleBar = win.querySelector(".title-bar");
+
+    // Get all the different handles for resizing a window.
+    let resizeHandleSE = win.querySelector(".resize-handle-se");
+    let resizeHandleNE = win.querySelector(".resize-handle-ne");
+    let resizeHandleNW = win.querySelector(".resize-handle-nw");
+    let resizeHandleSW = win.querySelector(".resize-handle-sw");
+
+    // Set the initial values for offsetting the window during drag.
     let dragOffsetX = 0;
     let dragOffsetY = 0;
 
+    // Add a listener to the window, that puts the window in focus when it is selected.
     win.addEventListener("mousedown", function() { setSelectedWindow(win, ctx); });
 
+    // Add a listener when the mouse is held down on the titlebar; preparing for drag.
     titleBar.addEventListener("mousedown", (e) => {
-        isDragging = true;
-        const rect = win.getBoundingClientRect();
+        let rect = win.getBoundingClientRect();
         dragOffsetX = e.clientX - rect.left;
         dragOffsetY = e.clientY - rect.top;
 
@@ -236,52 +247,110 @@ function addFunctionalities(win, ctx) {
     });
 
     function onDrag(e) {
-        if (!isDragging) return;
         win.style.left = (e.clientX - dragOffsetX) + "px";
         win.style.top  = (e.clientY - dragOffsetY) + "px";
     }
 
     function stopDrag() {
-        isDragging = false;
         document.removeEventListener("mousemove", onDrag);
         document.removeEventListener("mouseup", stopDrag);
     }
 
-    let isResizing = false;
-    let startWidth, startHeight, startX, startY;
+    // Initialise variables involved in resizing the window.
+    let startWidth, startHeight, startX, startY, startLeft, startTop;
 
-    resizeHandle.addEventListener("mousedown", (e) => {
-        e.stopPropagation();
-        isResizing = true;
+    // Set up common functions that are used across different resize handles.
+    function initWidthHeightXY(e) {
+        let rect = win.getBoundingClientRect();
 
-        const rect = win.getBoundingClientRect();
-        startWidth  = rect.width;
+        startWidth = rect.width;
         startHeight = rect.height;
+
         startX = e.clientX;
         startY = e.clientY;
+    }
 
-        document.addEventListener("mousemove", onResize);
-        document.addEventListener("mouseup", stopResize);
-    });
+    /**
+     * Updates the width and height of the window in a given direction based on mouse-movement.
+     * @param {Event} e The event being triggered.
+     * @param {int} width_dir The direction for the width to move in: 1 for moving right, -1 for moving left.
+     * @param {int} height_dir The direction for the height to move in: 1 for moving down, -1 for moving up.
+     */
+    function updateWidthHeight(e, width_dir, height_dir) {
+        let dx = e.clientX - startX;
+        let dy = e.clientY - startY;
 
-    function onResize(e) {
-        if (!isResizing) return;
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        const newWidth  = Math.max(250, startWidth  + dx);
-        const newHeight = Math.max(150, startHeight + dy);
+        let newWidth  = Math.max(minWidth, startWidth  + (dx * width_dir));
+        let newHeight = Math.max(minHeight, startHeight + (dy * height_dir));
 
         win.style.width  = newWidth  + "px";
         win.style.height = newHeight + "px";
+
+        return [dx, dy];
     }
 
-    function stopResize() {
-        isResizing = false;
-        document.removeEventListener("mousemove", onResize);
-        document.removeEventListener("mouseup", stopResize);
+    // for each resize handle, add an appropriate function for resizing to it.
+    resizeHandleSE.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+
+        initWidthHeightXY(e);
+
+        document.addEventListener("mousemove", (e) => { updateWidthHeight(e, 1, 1); });
+        document.addEventListener("mouseup", stopResizeSE);
+    });
+
+//     function onResizeSE(e) {
+//         const dx = e.clientX - startX;
+//         const dy = e.clientY - startY;
+//
+//         const newWidth  = Math.max(minWidth, startWidth  + dx);
+//         const newHeight = Math.max(minHeight, startHeight + dy);
+//
+//         win.style.width  = newWidth  + "px";
+//         win.style.height = newHeight + "px";
+//     }
+
+    function stopResizeSE() {
+        document.removeEventListener("mousemove", updateWidthHeight);
+        document.removeEventListener("mouseup", stopResizeSE);
     }
+
+    resizeHandleSW.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+
+        const rect = win.getBoundingClientRect();
+        startWidth = rect.width;
+        startHeight = rect.height;
+        startLeft = rect.left;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        document.addEventListener("mousemove", onResizeSW);
+        document.addEventListener("mouseup", stopResizeSW);
+    });
+
+    function onResizeSW(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const newWidth  = Math.max(minWidth, startWidth  - dx);
+        const newHeight = Math.max(minHeight, startHeight + dy);
+
+        win.style.width  = newWidth  + "px";
+        win.style.height = newHeight + "px";
+
+        if (newWidth != minWidth) {
+            let newLeft = Math.max(50, startLeft + dx);
+            win.style.left = newLeft + "px";
+        }
+    }
+
+    function stopResizeSW() {
+        document.removeEventListener("mousemove", onResizeSW);
+        document.removeEventListener("mouseup", stopResizeSW);
+    }
+
+
 }
 
 

@@ -36,7 +36,7 @@
 
     height: fit-content;
 
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid #252525;
 }
 
 .window-body {
@@ -85,11 +85,42 @@
 
 .resize-handle {
     position: absolute;
-    width: 14px;
-    height: 14px;
-    right: 4px;
-    bottom: 4px;
-    cursor: se-resize;
+
+    width: 5px;
+    height: 5px;
+
     background: #ccc;
     border-radius: 3px;
+}
+
+.resize-handle-se {
+    right: 0;
+    bottom: 0;
+    transform: translate(50%, 50%);
+
+    cursor: se-resize;
+}
+
+.resize-handle-sw {
+    left: 0;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+
+    cursor: sw-resize;
+}
+
+.resize-handle-ne {
+    right: 0;
+    top: 0;
+    transform: translate(50%, -50%);
+
+    cursor: ne-resize;
+}
+
+.resize-handle-nw {
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+
+    cursor: nw-resize;
 }
