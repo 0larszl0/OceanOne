@@ -224,10 +224,10 @@ function addFunctionalities(win, ctx) {
     let titleBar = win.querySelector(".title-bar");
 
     // Get all the different handles for resizing a window.
-    let resizeHandleSE = win.querySelector(".resize-handle-se");
-    let resizeHandleNE = win.querySelector(".resize-handle-ne");
-    let resizeHandleNW = win.querySelector(".resize-handle-nw");
-    let resizeHandleSW = win.querySelector(".resize-handle-sw");
+    let resizeHandles = win.querySelectorAll(".resize-handle");
+    let resizeHandleBars = win.querySelectorAll(".resize-handlebar");
+
+    let handles = [...resizeHandles, ...resizeHandleBars];
 
     // Set the initial values for offsetting the window during drag.
     let dragOffsetX = 0;
@@ -258,99 +258,102 @@ function addFunctionalities(win, ctx) {
 
     // Initialise variables involved in resizing the window.
     let startWidth, startHeight, startX, startY, startLeft, startTop;
+    let width_direction = true;  // when true, the width will be growing from the left-side, False for the right-side.
+    let height_direction = true;  // when true, the height grows from the bottom, False from the top.
 
     // Set up common functions that are used across different resize handles.
-    function initWidthHeightXY(e) {
+    function initWidthHeightXY(e, width_dir, height_dir) {
         let rect = win.getBoundingClientRect();
 
         startWidth = rect.width;
         startHeight = rect.height;
+        startLeft = rect.left;
+        startTop = rect.top;
 
         startX = e.clientX;
         startY = e.clientY;
+
+        width_direction = width_dir;
+        height_direction = height_dir;
+    }
+
+    function updateWidth(e) {
+        if (width_direction == null) { return null; }  // restrict any movement horizontally.
+
+        let dx = e.clientX - startX;
+
+        if (!width_direction) {  // if the user is dragging from the left side
+            dx *= -1;  // this will reduce the width when closing and grow it when expanding.
+        }
+
+        let newWidth = Math.max(minWidth, startWidth + dx);
+        win.style.width = newWidth + "px";
+
+        if (!width_direction && newWidth > minWidth) {
+            let newLeft = startLeft - dx;  // Negate the negation from dx *= -1, as the left should move in the original direction.
+            win.style.left = newLeft + "px";
+        }
+    }
+
+    function updateHeight(e) {
+        if (height_direction == null) { return null; }  // restrict any movement laterally.
+
+        let dy = e.clientY - startY;
+
+        if (!height_direction) {
+            dy *= -1;
+        }
+
+        let newHeight = Math.max(minHeight, startHeight + dy);
+        win.style.height = newHeight + "px";
+
+        if (!height_direction && newHeight > minHeight) {
+            let newTop = startTop - dy;
+            win.style.top = newTop + "px";
+        }
     }
 
     /**
      * Updates the width and height of the window in a given direction based on mouse-movement.
      * @param {Event} e The event being triggered.
-     * @param {int} width_dir The direction for the width to move in: 1 for moving right, -1 for moving left.
-     * @param {int} height_dir The direction for the height to move in: 1 for moving down, -1 for moving up.
      */
-    function updateWidthHeight(e, width_dir, height_dir) {
-        let dx = e.clientX - startX;
-        let dy = e.clientY - startY;
+    function updateWidthHeight(e) {
+        updateWidth(e);
+        updateHeight(e);
+    }
 
-        let newWidth  = Math.max(minWidth, startWidth  + (dx * width_dir));
-        let newHeight = Math.max(minHeight, startHeight + (dy * height_dir));
-
-        win.style.width  = newWidth  + "px";
-        win.style.height = newHeight + "px";
-
-        return [dx, dy];
+    function stopResize() {
+        document.removeEventListener("mousemove", updateWidthHeight);
+        document.removeEventListener("mouseup", stopResize);
     }
 
     // for each resize handle, add an appropriate function for resizing to it.
-    resizeHandleSE.addEventListener("mousedown", (e) => {
-        e.stopPropagation();
+    let widthHeightMods = {
+        "resize-handle-se": [true, true],
+        "resize-handle-sw": [false, true],
+        "resize-handle-ne": [true, false],
+        "resize-handle-nw": [false, false],
 
-        initWidthHeightXY(e);
+        "resize-handle-n": [null, false],
+        "resize-handle-s": [null, true],
+        "resize-handle-w": [false, null],
+        "resize-handle-e": [true, null]
+    };
 
-        document.addEventListener("mousemove", (e) => { updateWidthHeight(e, 1, 1); });
-        document.addEventListener("mouseup", stopResizeSE);
-    });
+    for (var i = 0; i < handles.length; i++) {
+        // Get the directions associated with the type of resizing handle there is.
+        let [handleWidthDir, handleHeightDir] = widthHeightMods[handles[i].classList[1]];
 
-//     function onResizeSE(e) {
-//         const dx = e.clientX - startX;
-//         const dy = e.clientY - startY;
-//
-//         const newWidth  = Math.max(minWidth, startWidth  + dx);
-//         const newHeight = Math.max(minHeight, startHeight + dy);
-//
-//         win.style.width  = newWidth  + "px";
-//         win.style.height = newHeight + "px";
-//     }
+        // Set a listener for mousedown onto it.
+        handles[i].addEventListener("mousedown", (e) => {
+            e.stopPropagation();
 
-    function stopResizeSE() {
-        document.removeEventListener("mousemove", updateWidthHeight);
-        document.removeEventListener("mouseup", stopResizeSE);
+            initWidthHeightXY(e, handleWidthDir, handleHeightDir);
+
+            document.addEventListener("mousemove", updateWidthHeight);
+            document.addEventListener("mouseup", stopResize);
+        });
     }
-
-    resizeHandleSW.addEventListener("mousedown", (e) => {
-        e.stopPropagation();
-
-        const rect = win.getBoundingClientRect();
-        startWidth = rect.width;
-        startHeight = rect.height;
-        startLeft = rect.left;
-        startX = e.clientX;
-        startY = e.clientY;
-
-        document.addEventListener("mousemove", onResizeSW);
-        document.addEventListener("mouseup", stopResizeSW);
-    });
-
-    function onResizeSW(e) {
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        const newWidth  = Math.max(minWidth, startWidth  - dx);
-        const newHeight = Math.max(minHeight, startHeight + dy);
-
-        win.style.width  = newWidth  + "px";
-        win.style.height = newHeight + "px";
-
-        if (newWidth != minWidth) {
-            let newLeft = Math.max(50, startLeft + dx);
-            win.style.left = newLeft + "px";
-        }
-    }
-
-    function stopResizeSW() {
-        document.removeEventListener("mousemove", onResizeSW);
-        document.removeEventListener("mouseup", stopResizeSW);
-    }
-
-
 }
 
 

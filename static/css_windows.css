@@ -89,7 +89,7 @@
     width: 5px;
     height: 5px;
 
-    background: #ccc;
+    background: transparent;
     border-radius: 3px;
 }
 
@@ -123,4 +123,40 @@
     transform: translate(-50%, -50%);
 
     cursor: nw-resize;
+}
+
+.resize-handlebar {
+    position: absolute;
+    background: transparent;
+    border-radius: 3px;
+}
+
+.resize-handle-w, .resize-handle-e {
+    height: 99%;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.resize-handle-w {
+    transform: translate(-50%, 0.6%);
+}
+
+.resize-handle-e {
+    right: 0;
+    transform: translate(50%, 0.6%);
+}
+
+.resize-handle-n, .resize-handle-s {
+    width: 99%;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.resize-handle-n {
+    transform: translate(0.6%, -50%);
+}
+
+.resize-handle-s {
+    bottom: 0;
+    transform: translate(0.6%, 50%);
 }
