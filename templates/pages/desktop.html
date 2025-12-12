@@ -167,6 +167,9 @@ OceanOne
 {% block main %}
 <div id="main-container">
     <div id="main-screen">
+        <div id="old-background" class="background-img suspend-pointer"></div>
+        <div id="new-background" class="background-img suspend-pointer"></div>
+
         <div id="weather-widget">
             <div id="temperature-container">
                 <span id="temperature-val"></span>
@@ -180,12 +183,12 @@ OceanOne
         </div>
 
         <!-- remote access overlay - blurred -->
-        <div id="hacker-overlay" class="hidden">
-            <div class="hacker-content">
-                <div class="hacker-header">Remote session started...</div>
-                <pre id="hacker-log"></pre>
-            </div>
-        </div>
+<!--        <div id="hacker-overlay" class="hidden">-->
+<!--            <div class="hacker-content">-->
+<!--                <div class="hacker-header">Remote session started...</div>-->
+<!--                <pre id="hacker-log"></pre>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <!-- A container for any created window. Grouped based on their context (i.e. email) -->
         <div id="window-container"></div>

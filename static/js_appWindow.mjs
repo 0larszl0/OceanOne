@@ -362,7 +362,6 @@ function addFunctionalities(win, ctx) {
  * @param {Event} event The click event on the close-btn class within the title bar of a window.
  */
 function closeWindow(event) {
-    console.log(event.target)
     // Get the window holding the button and the group its contained in.
     let app_window = event.target.parentNode.parentNode.parentNode;
     let app_group = app_window.parentNode;
@@ -385,6 +384,13 @@ function closeWindow(event) {
 
         // remove the hidden state from the app label.
         document.getElementById(`${split_win_id[0]}-label`).classList.remove("hidden");
+
+        return null;
+    }
+
+    // Check whether the window that has been closed was being focussed on.
+    if (app_window.classList.contains("focussed-window")) {
+        app_group.firstChild.classList.add("focussed-window");
     }
 }
 

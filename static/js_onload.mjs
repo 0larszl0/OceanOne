@@ -6,11 +6,14 @@ var currentHour = new Date().getUTCHours();
  * When all the html, stylesheets and js has been loaded, update hourly once immediately, and begin hiding the loader once everything is finished.
  */
 document.addEventListener("DOMContentLoaded", async function() {
+    /* -------- Add listeners to the new background  */
+    document.getElementById("new-background").addEventListener("animationend", (e) => {e.target.classList.remove("fade-in-anim");});
+
     await hourlyUpdate(currentHour);
 
     let pageLoader = document.getElementById("page-loader");
-    pageLoader.classList.add("fade-out");
-    pageLoader.classList.add("restrict-pointer");
+    pageLoader.classList.add("loader-fade-out");
+    pageLoader.classList.add("suspend-pointer");
 
     active_emails.push("phishing");  // doesn't use updateMailList because no email windows nor group exist onload.
 })

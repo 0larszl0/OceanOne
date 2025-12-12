@@ -18,8 +18,5 @@ function displayWeather(weather_details){
     for (var span_name in weather_details) {
         document.getElementById(span_name).innerText = weather_details[span_name];
     }
-
-    let temp_sym = document.getElementById("temperature-sym");
-    if (!temp_sym.innerText) { temp_sym.innerText += '°'; }
 }
 

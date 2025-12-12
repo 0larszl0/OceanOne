@@ -33,14 +33,16 @@ async def get_weather() -> Response:
     """Gets weather information based on the user's current location."""
 
     req_data = request.get_json()
-    response_template = {"location": "", "temperature-val": "", "temperature-unit": ""}
+    response_template = {"location": "", "temperature-val": "", "temperature-unit": "", "temperature-sym": ""}
 
     # -- Get location using ipinfo.io (no rate limits)
     try:
-        location_info = requests.get("https://ipinfo.io/json", timeout=5).json()
+        location_response = requests.get("https://ipinfo.io/json", timeout=5)
     except Exception as e:
         print("Error getting location:", e)
         return jsonify(response_template)
+
+    location_json = location_response.json()
 
     # print(location_info)
 
@@ -52,7 +54,7 @@ async def get_weather() -> Response:
     # -- Fetch weather for the detected city
     try:
         async with pw.Client(unit=unit) as client:
-            weather = await client.get(location_info["city"])
+            weather = await client.get(location_json["city"])
     except RequestError as e:
         print("Weather API error:", e)
         return jsonify(response_template)
@@ -63,8 +65,9 @@ async def get_weather() -> Response:
 
     # print(weather.kind, type(weather.kind), weather.kind.name, weather.kind.value)
 
-    response_template["location"] = f"{location_info['city']}, {location_info['country']}"
+    response_template["location"] = f"{location_json['city']}, {location_json['country']}"
     response_template["temperature-val"] = str(weather.temperature)
+    response_template["temperature-sym"] = '°'
     response_template["temperature-unit"] = req_data["temp_kind"]
 
     return jsonify(response_template)
