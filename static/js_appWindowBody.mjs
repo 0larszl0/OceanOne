@@ -4,8 +4,6 @@
  * @param {HTMLDivElement} win_group The group containing the currently created window..
  */
 function initWindowBody(ctx, win_group) {
-    console.log("Initialising Window Body");
-
     // Get the currently focussed window / the one that was just created.
     let focussed_win = win_group.querySelector(".focussed-window");
 

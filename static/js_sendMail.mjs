@@ -23,8 +23,6 @@ function AddToMailList(topic) {
  * @param {string} topic The topic, that the email will be containing.
  */
 async function addMail(win, topic) {
-    console.log("Adding mail: ", topic);
-
     let email_preview = document.createElement("div");
     let email_body = document.createElement("div");
 
@@ -89,10 +87,10 @@ function addDetails(details, email_preview, email_body) {
 function toggleEmailView(email_preview, email_body) {
     // Toggle the visibility and restrictions for the email list
     email_preview.parentNode.classList.toggle("hidden");
-    email_preview.parentNode.classList.toggle("restrict-pointer");
+    email_preview.parentNode.classList.toggle("suspend-pointer");
 
     // Toggle the visibility and restrictions for the email body.
     email_body.classList.toggle("hidden");
-    email_body.parentNode.classList.toggle("restrict-pointer");
+    email_body.parentNode.classList.toggle("suspend-pointer");
 }
 
