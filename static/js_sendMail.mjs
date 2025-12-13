@@ -1,14 +1,13 @@
 /* --- Globals --- */
-var active_emails = []  // a list containing different topics of an email.
+var active_emails = {}  // a dictionary containing different emails referenced by their topic, as keys, and whether they have been read as values.
 
 
 /**
- * Instead of directly adding emails to active_emails, this function is used for this whilst updating any active email
- * windows.
+ * Instead of directly adding emails to active_emails, this function is used for updating any active email windows.
  * @param {string} topic The topic to add to the emails.
  */
 function AddToMailList(topic) {
-    active_emails.push(topic);
+    active_emails[topic] = false;
 
     let email_windows = document.getElementById("email-group");
     for (var i = 0; i < email_windows.childElementCount; i++) {
@@ -32,8 +31,17 @@ async function addMail(win, topic) {
         addDetails, email_preview, email_body
     );
 
-    email_preview.classList = "email-preview unread";
+    // - Set appropriate class attributes to the preview and body elements -
+    email_preview.classList.add("email-preview");
+    if (!active_emails[topic]) {  // determines whether the email has been read before or not.
+        email_preview.classList.add("unread");
+    }
+
     email_body.classList = "email-body hidden";
+
+    // - Mark the div elements with the topic used -
+    email_preview.dataset.topic = topic;
+    email_body.dataset.topic = topic;
 
     // - Add the email preview to the top of the list of emails -
     let win_email_list = win.querySelector(".email-list");
@@ -44,7 +52,12 @@ async function addMail(win, topic) {
     win_body_list.insertBefore(email_body, win_body_list.childNodes[0]);
 
     // Add eventlisteners to both preview and button within the body, that toggles between email body and email list.
-    email_preview.addEventListener("click", function() {toggleEmailView(email_preview, email_body); email_preview.classList.remove("unread");} );
+    email_preview.addEventListener("click", function() {
+        toggleEmailView(email_preview, email_body);
+        active_emails[topic] = true;  // Ensure the email of this topic is marked as being read.
+
+        updateEmailReadStatus(win.parentNode, topic);
+    });
     email_body.querySelector(".view-email-list").addEventListener("click", function() {toggleEmailView(email_preview, email_body)});
 
 
@@ -94,3 +107,22 @@ function toggleEmailView(email_preview, email_body) {
     email_body.parentNode.classList.toggle("suspend-pointer");
 }
 
+
+/**
+ * Updates the read status of an email, of a particular topic, in all windows in the current window group.
+ * @param {HTMLDivElement} win_group The group the email window is in.
+ * @param {string} topic The topic of the email to have its read status changed.
+ */
+function updateEmailReadStatus(win_group, topic) {
+    for (var i = 0; i < win_group.childElementCount; i++) {  // for each window in the group of windows.
+        // get the email preview that has the read topic.
+        let selected_mail = win_group.childNodes[i].querySelector("[data-topic='phishing'], .email-preview");
+
+        if (!active_emails[topic]) {
+            selected_mail.classList.add("unread");
+            continue;
+        }
+
+        selected_mail.classList.remove("unread");
+    }
+}
