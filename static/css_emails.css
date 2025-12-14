@@ -91,8 +91,36 @@
     color: white;
 }
 
+.pre-header-actions {
+    width: 22%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.view-email-list, .report-email {
+    width: 40px;
+
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center;
+
+    border-radius: 50%;
+    box-shadow: 0 0 3px 0px rgb(0, 0, 0) inset;
+}
+
 .view-email-list {
-    width: 36px;
+    background-image: url("email-back-arrow.png");
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.report-email {
+    background-image: url("email-flag.png");
+    border-color: rgba(242, 89, 14, 0.51);
+}
+
+.view-email-list:hover, .report-email:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .email-header-title {

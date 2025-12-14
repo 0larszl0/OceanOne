@@ -80,14 +80,23 @@ def get_email() -> Response:
     response = {}
 
     match req_data["topic"]:
-        case "phishing":
+        case "ocean1-intro":
             response = {
-                "sender": "Account Security Team",
-                "sender-email": "no-reply@secure-update-alert.com",
-                "subject": "Security Alert: Account Access at 04:32",
-                "message": render_template("emails/content/phishing_intro.html"),
-                "body-structure": render_template("emails/email_body.html"),
-                "preview-structure": render_template("emails/email_preview.html")
+                "sender": "0larszl0",
+                "sender-email": "HaddmfNyiBvshsl@ocean.one",
+                "subject": "Welcome",
+                "message": render_template("emails/content/ocean1_intro.html")
             }
+
+        case "phishing-intro":
+            response = {
+                "sender": "0larszl0",
+                "sender-email": "HaddmfNyiBvshsl@ocean.one",
+                "subject": "Phishing Lesson",
+                "message": render_template("emails/content/phishing_intro.html")
+            }
+
+    response["body-structure"] = render_template("emails/email_body.html")
+    response["preview-structure"] = render_template("emails/email_preview.html")
 
     return jsonify(response)

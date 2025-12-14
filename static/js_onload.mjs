@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     pageLoader.classList.add("loader-fade-out");
     pageLoader.classList.add("suspend-pointer");
 
-    active_emails["phishing"] = false;  // doesn't use updateMailList because no email windows nor group exist onload.
+    active_emails["ocean1-intro"] = false;
+    active_emails["phishing-intro"] = false;  // doesn't use updateMailList because no email windows nor group exist onload.
 })
 
 
