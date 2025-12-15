@@ -21,147 +21,6 @@ OceanOne
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_timers.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_sendMail.mjs') }}"></script>
 <script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_appWindowBody.mjs') }}"></script>
-
-<script>
-    let hacked = false;
-
-    const hackerMessages = [
-        "Establishing remote desktop session...",
-        "Connecting to client machine...",
-        "Client online. Enumerating files...",
-        "Collecting browser cookies...",
-        "Dumping saved passwords...",
-        "Scanning local network for other devices...",
-        "Gaining persistence on startup...",
-        "Uploading session data to remote server..."
-    ];
-
-    function triggerFakeHack(event) {
-        if (event) event.preventDefault();
-        if (hacked) return;
-        hacked = true;
-
-        const mainScreen    = document.getElementById("main-screen");
-        const hackerOverlay = document.getElementById("hacker-overlay");
-        const log           = document.getElementById("hacker-log");
-
-        // Visually "lose control"
-        if (mainScreen) {
-            mainScreen.classList.add("blurred");
-        }
-        if (hackerOverlay) {
-            hackerOverlay.classList.remove("hidden");
-        }
-
-        if (!log) return;
-
-        log.textContent = "";
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i >= hackerMessages.length) {
-                clearInterval(interval);
-                // Wait 1.5 seconds, then show the separate summary popup
-                setTimeout(showHackSummary, 1500);
-                return;
-            }
-            log.textContent += hackerMessages[i] + "\n";
-            log.scrollTop = log.scrollHeight;
-            i++;
-        }, 800);
-    }
-
-    function showHackSummary() {
-        const modal = document.getElementById("hack-summary-modal");
-        // Don't remove blur – hacking scene stays blurred behind pop up
-        if (modal) {
-            modal.classList.remove("hidden");
-        }
-    }
-
-    function revealFollowupEmails() {
-        const resultItem = document.querySelector('.email-item[data-email="result"]');
-        const phish2Item = document.querySelector('.email-item[data-email="phish2"]');
-
-        if (resultItem) {
-            resultItem.classList.remove("email-hidden");
-        }
-        if (phish2Item) {
-            phish2Item.classList.remove("email-hidden");
-        }
-
-        // show the "you failed the test" email
-        setActiveEmail("result");
-    }
-
-    function closeHackSummary() {
-        const modal         = document.getElementById("hack-summary-modal");
-        const hackerOverlay = document.getElementById("hacker-overlay");
-        const mainScreen    = document.getElementById("main-screen");
-        const emailWin      = document.getElementById("email-window");
-
-        if (modal) {
-            modal.classList.add("hidden");
-        }
-        if (hackerOverlay) {
-            hackerOverlay.classList.add("hidden");
-        }
-        if (mainScreen) {
-            mainScreen.classList.remove("blurred");
-        }
-        if (emailWin) {
-            emailWin.classList.remove("hidden");
-            emailWin.style.display = "flex";
-        }
-
-        // After closing the popup, new emails appear
-        revealFollowupEmails();
-    }
-
-    function setActiveEmail(emailId) {
-        const items = document.querySelectorAll(".email-item");
-        items.forEach(item => {
-            if (item.dataset.email === emailId) {
-                item.classList.add("selected");
-            } else {
-                item.classList.remove("selected");
-            }
-        });
-
-        const bodies = document.querySelectorAll(".email-body-panel");
-        bodies.forEach(panel => {
-            if (panel.dataset.email === emailId) {
-                panel.classList.add("active");
-            } else {
-                panel.classList.remove("active");
-            }
-        });
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-        const emailWin = document.getElementById("email-window");
-        if (emailWin) {
-            makeWindowDraggableAndResizable(emailWin);
-        }
-
-        const phishLink = document.getElementById("phish-link");
-        if (phishLink) {
-            phishLink.addEventListener("click", triggerFakeHack);
-        }
-
-        // email list switching
-        const emailItems = document.querySelectorAll(".email-item");
-        emailItems.forEach(item => {
-            item.addEventListener("click", () => {
-                const id = item.dataset.email;
-                setActiveEmail(id);
-            });
-        });
-
-        // initial state: first phishing email selected
-        setActiveEmail("phish1");
-    });
-</script>
-
 {% endblock scripts %}
 
 {% block main %}
@@ -181,14 +40,6 @@ OceanOne
                 <span id="location"></span>
             </div>
         </div>
-
-        <!-- remote access overlay - blurred -->
-<!--        <div id="hacker-overlay" class="hidden">-->
-<!--            <div class="hacker-content">-->
-<!--                <div class="hacker-header">Remote session started...</div>-->
-<!--                <pre id="hacker-log"></pre>-->
-<!--            </div>-->
-<!--        </div>-->
 
         <!-- A container for any created window. Grouped based on their context (i.e. email) -->
         <div id="window-container"></div>
@@ -213,21 +64,4 @@ OceanOne
         <div id="loader"></div>
     </div>
 </div>
-
-<!-- Pop up after remote access ends -  this is outside #main-screen so it doesn't get blurred -->
-<!--<div id="hack-summary-modal" class="hidden">-->
-<!--    <div class="hack-summary-box">-->
-<!--        <h2>Training simulation: phishing link clicked</h2>-->
-<!--        <p>-->
-<!--            You clicked a suspicious link in an email from an untrusted sender.-->
-<!--            In a real attack, an attacker could now have remote access to your machine,-->
-<!--            steal data, or install malware.-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            Always check the sender address, hover over links to inspect the real URL,-->
-<!--            and avoid logging in via links in unexpected emails.-->
-<!--        </p>-->
-<!--        <button class="hack-summary-close-btn" onclick="closeHackSummary()">Close</button>-->
-<!--    </div>-->
-<!--</div>-->
 {% endblock main %}

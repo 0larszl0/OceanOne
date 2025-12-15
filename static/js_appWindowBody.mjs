@@ -11,8 +11,8 @@ function initWindowBody(ctx, win_group) {
     switch(ctx) {
         case "email":
             // attach all the relevant emails into the body of the current window.
-            for (var topic in active_emails) {
-                addMail(focussed_win, topic);
+            for (var t = 0; t < active_emails["topic-order"].length; t++) {
+                addMail(focussed_win, active_emails["topic-order"][t]);
             }
 
             break;

@@ -49,7 +49,7 @@
 }
 
 .email-from {
-    width: 33%;
+    width: 20%;
 }
 
 .email-snippet {
@@ -92,7 +92,6 @@
 }
 
 .pre-header-actions {
-    width: 22%;
     display: flex;
     justify-content: flex-start;
 }

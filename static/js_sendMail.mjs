@@ -6,7 +6,10 @@ var active_emails = {}  // a dictionary containing different emails referenced b
  * Instead of directly adding emails to active_emails, this function is used for updating any active email windows.
  * @param {string} topic The topic to add to the emails.
  */
-function AddToMailList(topic) {
+function addToMailList(topic) {
+    if (topic in active_emails) { return null; }
+
+    active_emails["topic-order"].push(topic);
     active_emails[topic] = false;
 
     let email_windows = document.getElementById("email-group");
@@ -51,15 +54,20 @@ async function addMail(win, topic) {
     let win_body_list = win.querySelector(".email-view");
     win_body_list.insertBefore(email_body, win_body_list.childNodes[0]);
 
-    // Add eventlisteners to both preview and button within the body, that toggles between email body and email list.
-    email_preview.addEventListener("click", function() {
-        toggleEmailView(email_preview, email_body);
+    // - Add eventlisteners to preview -
+    email_preview.addEventListener("click", function() {  // when the email preview is clicked
+        toggleEmailView(email_preview, email_body);  // change views
         active_emails[topic] = true;  // Ensure the email of this topic is marked as being read.
 
-        updateEmailReadStatus(win.parentNode, topic);
+        updateEmailReadStatus(win.parentNode, topic);  // update "read" status across other open windows.
     });
-    email_body.querySelector(".view-email-list").addEventListener("click", function() {toggleEmailView(email_preview, email_body)});
 
+    // - Add eventlisteners to body of email -
+    email_body.querySelector(".view-email-list").addEventListener("click", function() {toggleEmailView(email_preview, email_body)});
+    // Add listener for report button
+
+    // - Add any additional eventlisteners based on the topic. -
+    addTopicListener(email_body, topic);
 
     // check whether any group or whether the selected window is selected. If they're not, add a notification icon on the email app.
 
@@ -116,7 +124,7 @@ function toggleEmailView(email_preview, email_body) {
 function updateEmailReadStatus(win_group, topic) {
     for (var i = 0; i < win_group.childElementCount; i++) {  // for each window in the group of windows.
         // get the email preview that has the read topic.
-        let selected_mail = win_group.childNodes[i].querySelector("[data-topic='phishing'], .email-preview");
+        let selected_mail = win_group.childNodes[i].querySelector(`[data-topic='${topic}']`);
 
         if (!active_emails[topic]) {
             selected_mail.classList.add("unread");
@@ -124,5 +132,27 @@ function updateEmailReadStatus(win_group, topic) {
         }
 
         selected_mail.classList.remove("unread");
+    }
+}
+
+
+/**
+ * Based on the topic add a relevant event listener in the email body that will activate something.
+ * @param {HTMLDivElement} email_body The body of the email.
+ * @param {string} topic The
+ */
+function addTopicListener(email_body, topic) {
+    switch (topic) {
+        case "ocean1-intro":
+            // if you click back out of the Welcome email AND it's the only email being shown, add the phishing-intro email to the list.
+            email_body.querySelector(".view-email-list").addEventListener("click", function() { addToMailList("phishing-intro"); });
+
+            break;
+
+        case "phishing-intro":
+            // if you click the back button out of the phishing intro email, add the phishing test as the next mail.
+            email_body.querySelector(".view-email-list").addEventListener("click", function() { addToMailList("phishing-test"); });
+
+            break;
     }
 }

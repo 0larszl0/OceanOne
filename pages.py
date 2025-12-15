@@ -96,6 +96,14 @@ def get_email() -> Response:
                 "message": render_template("emails/content/phishing_intro.html")
             }
 
+        case "phishing-test":
+            response = {
+                "sender": "cnggwailw",
+                "sender-email": "cnggwailw@0cean.one",
+                "subject": "Unauthorised Account Access, 04:32",
+                "message": render_template("emails/content/phishing_test.html")
+            }
+
     response["body-structure"] = render_template("emails/email_body.html")
     response["preview-structure"] = render_template("emails/email_preview.html")
 
