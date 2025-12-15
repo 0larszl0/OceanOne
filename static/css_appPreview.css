@@ -18,18 +18,6 @@
     padding: 10px;
 }
 
-.app-notification {
-    position: absolute;
-    top: 5%;
-    right: 5%;
-    width: 12%;
-    height: 16%;
-    background: #ff1313;
-    border-radius: 50%;
-    border: 1px solid #900;
-    pointer-events: none;
-}
-
 .preview-container {
     width: 20vw;
     height: 20vh;

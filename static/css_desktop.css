@@ -78,6 +78,18 @@
     width: 100%;
 }
 
+.app-icon:hover {
+    background-image: radial-gradient(closest-side at 50%, rgba(215, 13, 13, 0.73), transparent);
+}
+
+.opened-app {
+    background-color: rgba(0, 0, 0, 0.22);
+}
+
+.focussed-app {
+    border-top: 1px solid #dd3131;
+}
+
 .app-icon button {
     height: 100%;
     width: 100%;
@@ -87,6 +99,11 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
+    border: none;
+}
+
+.app-icon button:hover {
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 /* --- Page Loader --- */

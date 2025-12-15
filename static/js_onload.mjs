@@ -29,9 +29,19 @@ window.onload = async function() {
 
     for (var i = 0; i < apps.length; i++) {
         // When you hover over the app button
-        apps[i].addEventListener("mouseover", function(event) { this.querySelector(".app-previews").classList.remove("hidden"); });
+        apps[i].addEventListener("mouseover", function() { this.querySelector(".app-previews").classList.remove("hidden"); });
 
         // When the mouse leaves the app previews
-        apps[i].addEventListener("mouseout", function(event) { this.querySelector(".app-previews").classList.add("hidden"); });
+        apps[i].addEventListener("mouseout", function() { this.querySelector(".app-previews").classList.add("hidden"); });
+
+        // When the mouse clicks the app icon
+        apps[i].querySelector(".app-icon button").addEventListener("click", function() {
+            let app = this.parentNode.parentNode;
+
+            // Indicate that the app has been opened
+            app.classList.add("opened-app");
+
+            toggleWindow(app.id.split('-')[0]);  // toggle the window of the app context
+        });
     }
 }

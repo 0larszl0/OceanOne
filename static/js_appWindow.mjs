@@ -196,14 +196,20 @@ async function toggleWindow(ctx) {
  */
 function setSelectedWindow(win, ctx) {
     let focussed_win = document.getElementById("window-container").querySelector(".focussed-window");
+    let focussed_app = document.getElementById("taskbar-apps").querySelector(".focussed-app");
 
-    if (focussed_win != null && focussed_win == win) {return null;}
+    if (focussed_win != null && focussed_win == win) { return null; }
 
     else if (focussed_win != null) {
         focussed_win.classList.remove("focussed-window");
     }
 
+    if ((focussed_app != null) && (focussed_app.id.split('-')[0] != win.id.split('-')[0])) {  // if a focussed app exists and the newly selected window does not share the same context (i.e. email != music)
+        focussed_app.remove("focussed-app");
+    }
+
     win.classList.add("focussed-window");
+    document.getElementById(`${win.id.split('-')[0]}-app`).classList.add("focussed-app");
 }
 
 /**
@@ -368,7 +374,8 @@ function closeWindow(event) {
 
     // Get the previews list of the app corresponding to the window
     let split_win_id = app_window.id.split('-');
-    let app_previews = document.getElementById(`${split_win_id[0]}-app`).querySelector(".app-previews");
+    let app = document.getElementById(`${split_win_id[0]}-app`);
+    let app_previews = app.querySelector(".app-previews");
 
     // Remove the preview that matches the id of the window
     app_previews.removeChild(document.getElementById(`${split_win_id[0]}-preview-${split_win_id[split_win_id.length - 1]}`));
@@ -384,6 +391,10 @@ function closeWindow(event) {
 
         // remove the hidden state from the app label.
         document.getElementById(`${split_win_id[0]}-label`).classList.remove("hidden");
+
+        // Remove any opened-app or focussed-app classes the taskbar app that is related to the app group has.
+        app.classList.remove("opened-app");
+        app.classList.remove("focussed-app");  // even if the app wasn't being focussed, this will not throw an exception.
 
         return null;
     }
