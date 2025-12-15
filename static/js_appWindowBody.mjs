@@ -3,7 +3,7 @@
  * @param {string} ctx The context of the created window.
  * @param {HTMLDivElement} win_group The group containing the currently created window..
  */
-function initWindowBody(ctx, win_group) {
+async function initWindowBody(ctx, win_group) {
     // Get the currently focussed window / the one that was just created.
     let focussed_win = win_group.querySelector(".focussed-window");
 
@@ -12,7 +12,7 @@ function initWindowBody(ctx, win_group) {
         case "email":
             // attach all the relevant emails into the body of the current window.
             for (var t = 0; t < active_emails["topic-order"].length; t++) {
-                addMail(focussed_win, active_emails["topic-order"][t]);
+                await addMail(focussed_win, active_emails["topic-order"][t]);  // await is so that emails stay in the order defined in active_emails["topic-order"]
             }
 
             break;

@@ -63,7 +63,7 @@ async function addMail(win, topic) {
     });
 
     // - Add eventlisteners to body of email -
-    email_body.querySelector(".view-email-list").addEventListener("click", function() {toggleEmailView(email_preview, email_body)});
+    email_body.querySelector(".view-email-list").addEventListener("click", function() { toggleEmailView(email_preview, email_body); });
     // Add listener for report button
 
     // - Add any additional eventlisteners based on the topic. -
@@ -96,7 +96,7 @@ function addDetails(details, email_preview, email_body) {
     // Add the details into the related divs within the preview.
     email_preview.querySelector(".email-from").innerText = details["sender"];
     email_preview.querySelector(".email-subject").innerText = details["subject"];
-    email_preview.querySelector(".email-message").innerText = ` - ${details["message"].replaceAll("<p>", '').replaceAll("</p>", '').replaceAll('\n', '')}`;
+    email_preview.querySelector(".email-message").innerText = ` - ${details["message"].replaceAll(new RegExp("</.*>", 'g'), '').replaceAll(new RegExp("<.*>", 'g'), '').replaceAll('\n', '')}`;
 }
 
 
