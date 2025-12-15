@@ -92,7 +92,7 @@ def get_email() -> Response:
             response = {
                 "sender": "0larszl0",
                 "sender-email": "HaddmfNyiBvshsl@ocean.one",
-                "subject": "Phishing Lesson",
+                "subject": "Lesson #1: Phishing",
                 "message": render_template("emails/content/phishing_intro.html")
             }
 

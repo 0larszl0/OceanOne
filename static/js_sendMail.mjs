@@ -68,9 +68,6 @@ async function addMail(win, topic) {
 
     // - Add any additional eventlisteners based on the topic. -
     addTopicListener(email_body, topic);
-
-    // check whether any group or whether the selected window is selected. If they're not, add a notification icon on the email app.
-
 }
 
 
@@ -152,6 +149,15 @@ function addTopicListener(email_body, topic) {
         case "phishing-intro":
             // if you click the back button out of the phishing intro email, add the phishing test as the next mail.
             email_body.querySelector(".view-email-list").addEventListener("click", function() { addToMailList("phishing-test"); });
+
+            break;
+
+        case "phishing-test":
+            // if you click the link, you get the 'death' screen.
+            email_body.querySelector("#verify-account").addEventListener("click", function() { console.log("PRESSED"); });
+
+            // if you click the report button, you get to proceed to the next lesson.
+            email_body.querySelector(".report-email").addEventListener("click", function() { console.log("CONGRATS"); } );
 
             break;
     }
