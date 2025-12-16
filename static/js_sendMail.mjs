@@ -153,7 +153,7 @@ function addTopicListener(email_body, topic) {
 
         case "phishing-test":
             // if you click the link, you get the 'death' screen.
-            email_body.querySelector("#verify-account").addEventListener("click", async function() { window.location.replace("/death-screen"); });
+            email_body.querySelector("#verify-account").addEventListener("click", async function() { window.location.replace("/death-screen/phishing"); });
 
             // if you click the report button, you get to proceed to the next lesson.
             email_body.querySelector(".report-email").addEventListener("click", function() { addToMailList("congratulations"); } );

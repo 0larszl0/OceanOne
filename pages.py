@@ -12,10 +12,10 @@ def home() -> str:
     return render_template("pages/desktop.html")
 
 
-@BP.route("/death-screen", methods=["GET"])
-def death_screen() -> str:
+@BP.route("/death-screen/<cause>", methods=["GET"])
+def death_screen(cause) -> str:
     """Returns the death screen when the user made an incorrect decision."""
-    return render_template("pages/death_screen.html")
+    return render_template(f"pages/death_screens/{cause}.html")
 
 
 @BP.route('/get-window', methods=["POST"])
