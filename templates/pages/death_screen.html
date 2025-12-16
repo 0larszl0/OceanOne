@@ -9,10 +9,6 @@ OceanOne
 <link rel="stylesheet" href="{{ url_for('static', filename='css_universal.css') }}">
 {% endblock stylesheets %}
 
-{% block scripts %}
-<script type="text/javascript" lang="javascript" src="{{ url_for('static', filename='js_deathOnLoad.mjs') }}"></script>
-{% endblock scripts %}
-
 {% block main %}
 <img id="death-screen-background" src="{{ url_for('static', filename='gif_hacker.gif') }}" alt="Gif of hacker"/>
 <div id="death-screen-message">
