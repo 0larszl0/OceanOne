@@ -64,7 +64,6 @@ async function addMail(win, topic) {
 
     // - Add eventlisteners to body of email -
     email_body.querySelector(".view-email-list").addEventListener("click", function() { toggleEmailView(email_preview, email_body); });
-    // Add listener for report button
 
     // - Add any additional eventlisteners based on the topic. -
     addTopicListener(email_body, topic);
@@ -154,10 +153,10 @@ function addTopicListener(email_body, topic) {
 
         case "phishing-test":
             // if you click the link, you get the 'death' screen.
-            email_body.querySelector("#verify-account").addEventListener("click", function() { console.log("PRESSED"); });
+            email_body.querySelector("#verify-account").addEventListener("click", async function() { window.location.replace("/death-screen"); });
 
             // if you click the report button, you get to proceed to the next lesson.
-            email_body.querySelector(".report-email").addEventListener("click", function() { console.log("CONGRATS"); } );
+            email_body.querySelector(".report-email").addEventListener("click", function() { addToMailList("congratulations"); } );
 
             break;
     }

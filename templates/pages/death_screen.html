@@ -4,6 +4,12 @@
 OceanOne
 {% endblock title %}
 
-{% block main %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_deathScreen.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_universal.css') }}">
+{% endblock stylesheets %}
 
+{% block main %}
+<img id="death-screen-background" src="{{ url_for('static', filename='gif_hacker.gif') }}" alt="Gif of hacker"/>
+<div id="death-screen-message"></div>
 {% endblock main %}

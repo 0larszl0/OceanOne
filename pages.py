@@ -8,8 +8,14 @@ BP = Blueprint("pages", __name__)
 
 @BP.route("/")
 def home() -> str:
-    """Returns the template of the home page"""
+    """Returns the screen containing a concept desktop environment."""
     return render_template("pages/desktop.html")
+
+
+@BP.route("/death-screen", methods=["GET"])
+def death_screen() -> str:
+    """Returns the death screen when the user made an incorrect decision."""
+    return render_template("pages/death_screen.html")
 
 
 @BP.route('/get-window', methods=["POST"])
@@ -42,6 +48,7 @@ async def get_weather() -> Response:
         print("Error getting location:", e)
         return jsonify(response_template)
 
+    print(location_response)
     location_json = location_response.json()
 
     # print(location_info)
@@ -102,6 +109,14 @@ def get_email() -> Response:
                 "sender-email": "cnggwailw@0cean.one",
                 "subject": "Unauthorised Account Access, 04:32",
                 "message": render_template("emails/content/phishing_test.html")
+            }
+
+        case "congratulations":
+            response = {
+                "sender": "0larszl0",
+                "sender-email": "HaddmfNyiBvshsl@ocean.one",
+                "subject": "Congratulations!",
+                "message": render_template("emails/content/congratulations.html")
             }
 
     response["body-structure"] = render_template("emails/email_body.html")
